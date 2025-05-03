@@ -16,8 +16,10 @@ public class OrderItemServiceList implements OrderItemServiceInterface{
     void init(){
         OrderItem orderItem1 = new OrderItem();
         orderItem1.setOrderId(1L);
+        orderItem1.setQuantity(4);
         OrderItem orderItem2 = new OrderItem();
         orderItem2.setOrderId(2L);
+        orderItem1.setQuantity(4);
         localeStorage.addAll(List.of(orderItem1,orderItem2));
     }
 

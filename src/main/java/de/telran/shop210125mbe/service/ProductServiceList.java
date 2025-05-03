@@ -18,8 +18,8 @@ public class ProductServiceList implements ProductServiceInterface{
         product1.setName("Carrot");
 
         Product product2 = new Product();
-        product1.setProductId(2L);
-        product1.setName("Broccoli");
+        product2.setProductId(2L);
+        product2.setName("Broccoli");
         localeStorage.addAll(List.of(product1, product2));
     }
 

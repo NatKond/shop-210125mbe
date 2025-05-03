@@ -14,7 +14,7 @@ public class OrderItemController {
     @Autowired
     OrderItemServiceInterface orderItemServiceInterface;
 
-    @PutMapping
+    @GetMapping
     public List<OrderItem> getAllOrderItems(){
         System.out.println("Get all order items");
         return orderItemServiceInterface.getAllOrderItems();

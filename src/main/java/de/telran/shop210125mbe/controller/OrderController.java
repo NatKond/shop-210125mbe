@@ -2,6 +2,7 @@ package de.telran.shop210125mbe.controller;
 
 import de.telran.shop210125mbe.model.Order;
 import de.telran.shop210125mbe.service.OrderServiceInterface;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,12 +10,12 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/order")
 public class OrderController {
-
+    @Autowired
     OrderServiceInterface orderServiceInterface;
 
     @GetMapping
-    public List<Order> getAllProducts(){
-        System.out.println("Get all products");
+    public List<Order> getAllOrders(){
+        System.out.println("Get all orders");
         return orderServiceInterface.getAllOrders();
     }
 

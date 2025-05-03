@@ -10,7 +10,6 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/favorite")
 public class FavoriteController {
-
     @Autowired
     FavoriteServiceInterface favoriteServiceInterface;
 
@@ -20,7 +19,7 @@ public class FavoriteController {
         return favoriteServiceInterface.getAllFavorites();
     }
 
-    @PutMapping
+    @PostMapping
     public void insertFavorite(){
         System.out.println("Insert favorite");
     }

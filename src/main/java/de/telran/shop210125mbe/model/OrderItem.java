@@ -11,14 +11,14 @@ public class OrderItem {
 
     private Long productId;
 
-    private Long quantity;
+    private Integer quantity;
 
     private DecimalFormat priceAtPurchase;
 
     public OrderItem() {
     }
 
-    public OrderItem(Long orderItemId, Long orderId, Long productId, Long quantity, DecimalFormat priceAtPurchase) {
+    public OrderItem(Long orderItemId, Long orderId, Long productId, Integer quantity, DecimalFormat priceAtPurchase) {
         this.orderItemId = orderItemId;
         this.orderId = orderId;
         this.productId = productId;
@@ -50,11 +50,11 @@ public class OrderItem {
         this.productId = productId;
     }
 
-    public Long getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(Long quantity) {
+    public void setQuantity(Integer quantity) {
         this.quantity = quantity;
     }
 
@@ -70,7 +70,9 @@ public class OrderItem {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         OrderItem orderItem = (OrderItem) o;
-        return Objects.equals(orderItemId, orderItem.orderItemId) && Objects.equals(orderId, orderItem.orderId) && Objects.equals(productId, orderItem.productId) && Objects.equals(quantity, orderItem.quantity) && Objects.equals(priceAtPurchase, orderItem.priceAtPurchase);
+        return Objects.equals(orderItemId, orderItem.orderItemId) && Objects.equals(orderId, orderItem.orderId)
+                && Objects.equals(productId, orderItem.productId) && Objects.equals(quantity, orderItem.quantity)
+                && Objects.equals(priceAtPurchase, orderItem.priceAtPurchase);
     }
 
     @Override

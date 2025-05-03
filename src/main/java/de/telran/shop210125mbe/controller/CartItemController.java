@@ -16,7 +16,7 @@ public class CartItemController {
 
     @GetMapping
     public List<CartItem> getAllCartItems() {
-        System.out.println("Get all cartItems");
+        System.out.println("Get all cart items");
         return cartItemServiceInterface.getAllCartItems();
     }
 
