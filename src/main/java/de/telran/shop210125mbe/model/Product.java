@@ -7,9 +7,6 @@ import org.springframework.stereotype.Component;
 import java.sql.Timestamp;
 import java.util.Objects;
 
-import static de.telran.shop210125mbe.TextFormatting.RESET;
-import static de.telran.shop210125mbe.TextFormatting.YELLOW;
-
 // @Component("carrot") // явно задаем имя переменной в контейнере
 @Component // по умолчанию имя переменной будет равно имени класса с маленькой буквы
 public class Product {
@@ -34,12 +31,12 @@ public class Product {
 
     @PostConstruct
     void init(){
-        System.out.println(YELLOW + " + Выполняем какие-то действия после создания объекта, перед его использованием " + this + RESET);
+        System.out.println("\u001B[33m + Выполняем какие-то действия после создания объекта, перед его использованием " + this + "\u001B[0m");
     }
 
     @PreDestroy
     void destroy(){
-        System.out.println(YELLOW + " - Выполняем какие-то действия перед уничтожением объекта " + this + RESET);
+        System.out.println("\u001B[33m - Выполняем какие-то действия перед уничтожением объекта " + this + "\u001B[0m");
     }
 
     public Product() {
