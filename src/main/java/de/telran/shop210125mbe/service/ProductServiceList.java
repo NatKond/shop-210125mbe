@@ -33,13 +33,19 @@ public class ProductServiceList implements ProductServiceInterface {
 
     @Override
     public Product getProductById(Long productId) {
-        return localeStorage.stream().filter(product -> product.getProductId().equals(productId)).findAny().orElse(null);
+        return localeStorage.stream().filter(product -> product.getProductId().equals(productId))
+                .findFirst().orElseThrow(() -> new IllegalArgumentException("Product with id = " + productId + " is not found."));
     }
 
     @Override
     public Product insertProduct(Product newProduct) {
-        localeStorage.add(newProduct);
-        return getProductById(newProduct.getProductId());
+        if (newProduct.getProductId() != null &&
+                localeStorage.stream()
+                        .noneMatch(product -> product.getProductId().equals(newProduct.getProductId()))) {
+            localeStorage.add(newProduct);
+            return getProductById(newProduct.getProductId());
+        }
+        throw new RuntimeException("Product is not created. Either id = null or there is already a product with this id.");
     }
 
     @Override
@@ -57,34 +63,40 @@ public class ProductServiceList implements ProductServiceInterface {
     public Product updatePartProduct(Long productId, Product updatedProduct) {
         for (Product product : localeStorage) {
             if (product.getProductId().equals(productId)) {
-                if (!Objects.equals(product.getProductId(), updatedProduct.getProductId())) {
+                if (updatedProduct.getProductId() != null &&
+                        !updatedProduct.getProductId().equals(product.getProductId())) {
                     product.setProductId(updatedProduct.getProductId());
                 }
-                if (!Objects.equals(product.getName(), updatedProduct.getName())) {
+                if (updatedProduct.getName() != null &&
+                        !updatedProduct.getName().equals(product.getName())) {
                     product.setName(updatedProduct.getName());
                 }
-                if (!Objects.equals(product.getDescription(), updatedProduct.getDescription())) {
+                if (updatedProduct.getDescription() != null &&
+                        !updatedProduct.getDescription().equals(product.getDescription())) {
                     product.setDescription(updatedProduct.getDescription());
                 }
-                if (!Objects.equals(product.getPrice(), updatedProduct.getPrice())) {
+                if (updatedProduct.getPrice() != null &&
+                        !updatedProduct.getPrice().equals(product.getPrice())) {
                     product.setPrice(updatedProduct.getPrice());
                 }
-                if (!Objects.equals(product.getDiscountPrice(), updatedProduct.getDiscountPrice())) {
+                if (updatedProduct.getDiscountPrice() != null &&
+                        !updatedProduct.getDiscountPrice().equals(product.getDiscountPrice())) {
                     product.setDiscountPrice(updatedProduct.getDiscountPrice());
                 }
-                if (!Objects.equals(product.getCategoryId(), updatedProduct.getCategoryId())) {
+                if (updatedProduct.getCategoryId() != null &&
+                        !updatedProduct.getCategoryId().equals(product.getCategoryId())) {
                     product.setCategoryId(updatedProduct.getCategoryId());
                 }
                 return product;
             }
         }
-        return null;
+        throw new IllegalArgumentException("Product with id = " + productId + " is not found.");
     }
 
     @Override
     public void deleteProductById(Long productId) {
         if (localeStorage.removeIf(product -> product.getProductId().equals(productId))) return;
-        throw new IllegalArgumentException("Invalid product index.");
+        throw new IllegalArgumentException("Product with id = " + productId + " is not found.");
 
 //        Iterator<Product> iterator = localeStorage.iterator();
 //        while (iterator.hasNext()) {

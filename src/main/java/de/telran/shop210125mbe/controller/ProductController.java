@@ -5,6 +5,8 @@ import de.telran.shop210125mbe.model.Product;
 import de.telran.shop210125mbe.service.ProductServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +26,7 @@ public class ProductController {
 
     @GetMapping("find/{id}") // http://localhost:8080/product/find/1
     public Product getProduct(@PathVariable(name = "id") Long productId) {
-        System.out.println("Get " + productId + " products");
+        System.out.println("Get " + productId + " product");
         return productServiceInterface.getProductById(productId);
     }
 
@@ -39,22 +41,34 @@ public class ProductController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{id}")
     public Product updateProduct(@PathVariable(name = "id") Long productId, @RequestBody Product updatedProduct) {
-        System.out.println("Update product");
+        System.out.println("Update " + productId + " product");
         return productServiceInterface.updateProduct(productId, updatedProduct);
     }
 
     // обновление части информации, если объекта не существует, новый не создаем
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @PatchMapping("/{id}")
     public Product updatePartProduct(@PathVariable(name = "id") Long productId, @RequestBody Product updatedProduct) {
-        System.out.println("Update product partially");
+        System.out.println("Update " + productId + " product partially");
         return productServiceInterface.updatePartProduct(productId, updatedProduct);
     }
 
     //удаление
-    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable(name = "id") Long productId) {
-        System.out.println("Delete product");
+        System.out.println("Delete " + productId + " product");
         productServiceInterface.deleteProductById(productId);
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public String handlerIllegalArgumentException(IllegalArgumentException exception) {
+        return "Product controller: " + exception.getMessage();
+    }
+
+    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    @ExceptionHandler(Exception.class)
+    public String handlerException(Exception exception) {
+        return "Sorry, an error has occurred : " + exception.getMessage() + " Please try again later.";
     }
 }

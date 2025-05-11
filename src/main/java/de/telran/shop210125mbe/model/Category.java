@@ -1,43 +1,21 @@
 package de.telran.shop210125mbe.model;
 
-import java.util.Objects;
+import lombok.*;
+import org.springframework.stereotype.Component;
 
+@AllArgsConstructor // конструктор с инициализацией всех параметров
+@NoArgsConstructor // конструктор без аргументов
+@Setter // для создания всех set
+@Getter // для создания всех get
+@ToString // для создания метода toString
+@EqualsAndHashCode // для создания метода toString()
+
+//@Data // заменяет набор выше указанных аннотаций (не всегда корректно!!)
+@Component
 public class Category {
 
-   private Long categoryId;
+    private Long categoryId;
 
-   private String name;
+    private String name;
 
-    public Category(Long categoryId, String name) {
-        this.categoryId = categoryId;
-        this.name = name;
-    }
-
-    public Long getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(Long categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        Category category = (Category) o;
-        return Objects.equals(categoryId, category.categoryId) && Objects.equals(name, category.name);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(categoryId, name);
-    }
 }
