@@ -22,7 +22,7 @@ public class UserController {
         return userServiceInterface.getAllUsers();
     }
 
-    @GetMapping("find/{id}")
+    @GetMapping("/{id}")
     public User getUser(@PathVariable Long id) {
         System.out.println("Get " + id + " user");
         return userServiceInterface.getUserById(id);
@@ -56,11 +56,5 @@ public class UserController {
     @ExceptionHandler(IllegalArgumentException.class)
     public String handlerIllegalArgumentException(IllegalArgumentException exception) {
         return "Product controller: " + exception.getMessage();
-    }
-
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
-    @ExceptionHandler(Exception.class)
-    public String handlerException(Exception exception) {
-        return "Sorry, an error has occurred : " + exception.getMessage() + " Please try again later.";
     }
 }

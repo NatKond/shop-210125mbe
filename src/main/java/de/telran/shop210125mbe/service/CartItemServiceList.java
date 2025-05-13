@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Component
 public class CartItemServiceList implements  CartItemServiceInterface{
@@ -28,7 +29,7 @@ public class CartItemServiceList implements  CartItemServiceInterface{
     @Override
     public CartItem getCartItemById(Long id) {
         return localeStorage.stream().filter(cartItem -> cartItem.getCartItemId().equals(id))
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("Cart item with id = " + id + " is not found."));
+                .findFirst().orElseThrow(() -> new NoSuchElementException("Cart item with id = " + id + " is not found."));
     }
 
     @Override

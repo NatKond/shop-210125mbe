@@ -2,12 +2,14 @@ package de.telran.shop210125mbe.service;
 
 import de.telran.shop210125mbe.model.Category;
 import jakarta.annotation.PostConstruct;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Primary // при конфликтных ситуациях, когда есть несколько компонентов, имплементирующих один интерфейс, выбирается этот
 @Service
 public class CategoryServiceList implements CategoryServiceInterface{
 

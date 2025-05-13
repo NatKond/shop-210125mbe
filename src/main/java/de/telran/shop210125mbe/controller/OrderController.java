@@ -25,7 +25,7 @@ public class OrderController {
                         .body("Orders are not found.");
     }
 
-    @GetMapping("find/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getOrder(@PathVariable Long id) {
         System.out.println("Get " + id + " order");
         Order order = orderServiceInterface.getOrderById(id);
@@ -62,11 +62,5 @@ public class OrderController {
         System.out.println("Delete " + id + " order");
         return (orderServiceInterface.deleteOrderById(id)) ? ResponseEntity.ok("Order with id = " + id + " is deleted.") :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body("Order with id = " + id + " is not found.");
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handlerException(Exception exception) {
-        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT)
-                .body("Sorry, an error has occurred : " + exception.getMessage() + ". Please try again later.");
     }
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Component
 public class UserServiceList implements UserServiceInterface{
@@ -39,7 +40,7 @@ public class UserServiceList implements UserServiceInterface{
     @Override
     public User getUserById(Long id) {
         return localeStorage.stream().filter(user -> user.getUserId().equals(id))
-                .findAny().orElseThrow(() -> new IllegalArgumentException("User with id = " + id + " is not found."));
+                .findAny().orElseThrow(() -> new NoSuchElementException("User with id = " + id + " is not found."));
     }
 
     @Override

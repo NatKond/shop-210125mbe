@@ -24,7 +24,7 @@ public class CartController {
                 new ResponseEntity<>("Carts are not found.", HttpStatus.valueOf(404));
     }
 
-    @GetMapping("find/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getCart(@PathVariable Long id) {
         System.out.println("Get " + id + " cart");
         Cart cart = cartServiceInterface.getCartById(id);
@@ -61,11 +61,5 @@ public class CartController {
         System.out.println("Delete" + id + "cart");
         return (cartServiceInterface.deleteCartById(id)) ? ResponseEntity.ok().body("Cart with id = " + id + " is deleted.") :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart with id = " + id + " is not found.");
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handlerException(Exception exception) {
-        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT)
-                .body("Sorry, an error has occurred : " + exception.getMessage() + ". Please try again later.");
     }
 }

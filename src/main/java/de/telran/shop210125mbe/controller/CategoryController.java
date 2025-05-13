@@ -4,6 +4,7 @@ import de.telran.shop210125mbe.model.Category;
 import de.telran.shop210125mbe.model.Product;
 import de.telran.shop210125mbe.service.CategoryServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import java.util.List;
 public class CategoryController {
 
     @Autowired
+    @Qualifier("categoryJdbc")
     CategoryServiceInterface categoryServiceInterface;
 
     @GetMapping
@@ -26,7 +28,7 @@ public class CategoryController {
                 new ResponseEntity<>("Categories are not found.", HttpStatus.valueOf(404));
     }
 
-    @GetMapping("find/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getCategory(@PathVariable Long id) {
         System.out.println("Get " + id + " category");
         Category category = categoryServiceInterface.getCategoryById(id);
@@ -63,11 +65,5 @@ public class CategoryController {
         System.out.println("Delete " + id + " category");
         return (categoryServiceInterface.deleteCategoryById(id)) ? ResponseEntity.ok("Category with id = " + id + " is deleted.") :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body("Category with id = " + id + " is not found.");
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> handlerException(Exception exception) {
-        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT)
-                .body("Sorry, an error has occurred : " + exception.getMessage() + ". Please try again later.");
     }
 }

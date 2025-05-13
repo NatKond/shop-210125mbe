@@ -24,7 +24,7 @@ public class ProductController {
         return productServiceInterface.getAllProducts();
     }
 
-    @GetMapping("find/{id}") // http://localhost:8080/product/find/1
+    @GetMapping("/{id}") // http://localhost:8080/product/find/1
     public Product getProduct(@PathVariable(name = "id") Long productId) {
         System.out.println("Get " + productId + " product");
         return productServiceInterface.getProductById(productId);
@@ -64,11 +64,5 @@ public class ProductController {
     @ExceptionHandler(IllegalArgumentException.class)
     public String handlerIllegalArgumentException(IllegalArgumentException exception) {
         return "Product controller: " + exception.getMessage();
-    }
-
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
-    @ExceptionHandler(Exception.class)
-    public String handlerException(Exception exception) {
-        return "Sorry, an error has occurred : " + exception.getMessage() + " Please try again later.";
     }
 }

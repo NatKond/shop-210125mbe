@@ -22,7 +22,7 @@ public class CartItemController {
         return cartItemServiceInterface.getAllCartItems();
     }
 
-    @GetMapping("find/{id}")
+    @GetMapping("/{id}")
     public CartItem getCartItemById(@PathVariable Long id) {
         System.out.println("Get " + id + " cart item");
         return cartItemServiceInterface.getCartItemById(id);
@@ -59,11 +59,5 @@ public class CartItemController {
     @ExceptionHandler(IllegalArgumentException.class)
     public String handlerIllegalArgumentException(IllegalArgumentException exception) {
         return "Cart item controller: " + exception.getMessage();
-    }
-
-    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
-    @ExceptionHandler(Exception.class)
-    public String handlerException(Exception exception) {
-        return "Sorry, an error has occurred : " + exception.getMessage() + " Please try again later.";
     }
 }

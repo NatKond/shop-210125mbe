@@ -2,12 +2,10 @@ package de.telran.shop210125mbe.service;
 
 import de.telran.shop210125mbe.model.Product;
 import jakarta.annotation.PostConstruct;
+import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Component
 public class ProductServiceList implements ProductServiceInterface {
@@ -34,7 +32,7 @@ public class ProductServiceList implements ProductServiceInterface {
     @Override
     public Product getProductById(Long productId) {
         return localeStorage.stream().filter(product -> product.getProductId().equals(productId))
-                .findFirst().orElseThrow(() -> new IllegalArgumentException("Product with id = " + productId + " is not found."));
+                .findFirst().orElseThrow(() -> new NoSuchElementException("Product with id = " + productId + " is not found."));
     }
 
     @Override
