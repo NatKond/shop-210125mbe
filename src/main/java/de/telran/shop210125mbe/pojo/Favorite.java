@@ -1,4 +1,4 @@
-package de.telran.shop210125mbe.model;
+package de.telran.shop210125mbe.pojo;
 
 import java.util.Objects;
 
@@ -9,6 +9,9 @@ public class Favorite {
     private Long userId;
 
     private Long productId;
+
+    public Favorite() {
+    }
 
     public Favorite(Long favoriteId, Long userId, Long productId) {
         this.favoriteId = favoriteId;

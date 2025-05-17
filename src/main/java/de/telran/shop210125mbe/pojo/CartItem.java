@@ -1,4 +1,4 @@
-package de.telran.shop210125mbe.model;
+package de.telran.shop210125mbe.pojo;
 
 import java.util.Objects;
 
@@ -11,6 +11,9 @@ public class CartItem {
     private Long productId;
 
     private Integer quantity;
+
+    public CartItem() {
+    }
 
     public CartItem(Long cartItemId, Long cartId, Long productId, Integer quantity) {
         this.cartItemId = cartItemId;

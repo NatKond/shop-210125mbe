@@ -1,7 +1,6 @@
 package de.telran.shop210125mbe.controller;
 
-import de.telran.shop210125mbe.model.CartItem;
-import de.telran.shop210125mbe.model.Product;
+import de.telran.shop210125mbe.pojo.CartItem;
 import de.telran.shop210125mbe.service.CartItemServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

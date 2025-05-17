@@ -1,6 +1,6 @@
 package de.telran.shop210125mbe.controller;
 
-import de.telran.shop210125mbe.model.Favorite;
+import de.telran.shop210125mbe.pojo.Favorite;
 import de.telran.shop210125mbe.service.FavoriteServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;

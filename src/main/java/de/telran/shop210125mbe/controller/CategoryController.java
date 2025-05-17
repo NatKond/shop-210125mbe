@@ -1,7 +1,6 @@
 package de.telran.shop210125mbe.controller;
 
-import de.telran.shop210125mbe.model.Category;
-import de.telran.shop210125mbe.model.Product;
+import de.telran.shop210125mbe.pojo.Category;
 import de.telran.shop210125mbe.service.CategoryServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

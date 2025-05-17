@@ -1,6 +1,6 @@
 package de.telran.shop210125mbe.service;
 
-import de.telran.shop210125mbe.model.OrderItem;
+import de.telran.shop210125mbe.pojo.OrderItem;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 

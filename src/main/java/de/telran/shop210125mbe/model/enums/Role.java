@@ -1,4 +1,4 @@
-package de.telran.shop210125mbe.model;
+package de.telran.shop210125mbe.model.enums;
 
 public enum Role {
     CLIENT,

@@ -1,8 +1,7 @@
 package de.telran.shop210125mbe.service;
 
-import de.telran.shop210125mbe.model.Product;
+import de.telran.shop210125mbe.pojo.Product;
 import jakarta.annotation.PostConstruct;
-import org.apache.coyote.BadRequestException;
 import org.springframework.stereotype.Component;
 
 import java.util.*;

@@ -1,9 +1,8 @@
 package de.telran.shop210125mbe.service;
 
-import de.telran.shop210125mbe.model.Category;
+import de.telran.shop210125mbe.pojo.Category;
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Primary;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

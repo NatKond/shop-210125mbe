@@ -1,6 +1,6 @@
 package de.telran.shop210125mbe.service;
 
-import de.telran.shop210125mbe.model.User;
+import de.telran.shop210125mbe.pojo.User;
 
 import java.util.List;
 

@@ -1,14 +1,11 @@
 package de.telran.shop210125mbe.service;
 
-import de.telran.shop210125mbe.model.Cart;
-import de.telran.shop210125mbe.model.Product;
+import de.telran.shop210125mbe.pojo.Cart;
 import jakarta.annotation.PostConstruct;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class CartServiceList implements CartServiceInterface {

@@ -1,6 +1,6 @@
 package de.telran.shop210125mbe;
 
-import de.telran.shop210125mbe.model.Product;
+import de.telran.shop210125mbe.pojo.Product;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;

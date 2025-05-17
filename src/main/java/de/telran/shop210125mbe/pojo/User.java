@@ -1,6 +1,4 @@
-package de.telran.shop210125mbe.model;
-
-import org.springframework.context.support.BeanDefinitionDsl;
+package de.telran.shop210125mbe.pojo;
 
 import java.util.Objects;
 
@@ -12,9 +10,9 @@ public class User {
 
     private String email;
 
-    private String PhoneNumber;
+    private String phoneNumber;
 
-    private String PasswordHash;
+    private String passwordHash;
 
     private Role role;
 
@@ -25,8 +23,8 @@ public class User {
         this.userId = userId;
         this.name = name;
         this.email = email;
-        PhoneNumber = phoneNumber;
-        PasswordHash = passwordHash;
+        this.phoneNumber = phoneNumber;
+        this.passwordHash = passwordHash;
         this.role = role;
     }
 
@@ -55,19 +53,19 @@ public class User {
     }
 
     public String getPhoneNumber() {
-        return PhoneNumber;
+        return phoneNumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {
-        PhoneNumber = phoneNumber;
+        this.phoneNumber = phoneNumber;
     }
 
     public String getPasswordHash() {
-        return PasswordHash;
+        return passwordHash;
     }
 
     public void setPasswordHash(String passwordHash) {
-        PasswordHash = passwordHash;
+        this.passwordHash = passwordHash;
     }
 
     public Role getRole() {
@@ -82,11 +80,11 @@ public class User {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(userId, user.userId) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(PhoneNumber, user.PhoneNumber) && Objects.equals(PasswordHash, user.PasswordHash) && role == user.role;
+        return Objects.equals(userId, user.userId) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(phoneNumber, user.phoneNumber) && Objects.equals(passwordHash, user.passwordHash) && role == user.role;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId, name, email, PhoneNumber, PasswordHash, role);
+        return Objects.hash(userId, name, email, phoneNumber, passwordHash, role);
     }
 }

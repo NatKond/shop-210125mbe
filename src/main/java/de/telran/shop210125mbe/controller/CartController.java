@@ -1,10 +1,10 @@
 package de.telran.shop210125mbe.controller;
 
-import de.telran.shop210125mbe.model.Cart;
+import de.telran.shop210125mbe.pojo.Cart;
 import de.telran.shop210125mbe.service.CartServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +13,9 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/cart")
 public class CartController {
+
     @Autowired
+    @Qualifier("cartJdbc")
     CartServiceInterface cartServiceInterface;
 
     @GetMapping
@@ -43,7 +45,7 @@ public class CartController {
     @PutMapping("/{id}")
     public ResponseEntity<?> updateCart(@PathVariable Long id, @RequestBody Cart updatedCart) {
         System.out.println("Update " + id + " cart");
-        Cart cart = cartServiceInterface.createCart(cartServiceInterface.updateCart(id, updatedCart));
+        Cart cart = cartServiceInterface.updateCart(id, updatedCart);
         return (cart != null) ? ResponseEntity.status(HttpStatus.ACCEPTED).body(cart) :
                 ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cart is not updated.");
     }

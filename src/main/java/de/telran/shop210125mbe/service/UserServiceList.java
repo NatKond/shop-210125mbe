@@ -1,8 +1,7 @@
 package de.telran.shop210125mbe.service;
 
-import de.telran.shop210125mbe.model.Product;
-import de.telran.shop210125mbe.model.Role;
-import de.telran.shop210125mbe.model.User;
+import de.telran.shop210125mbe.pojo.Role;
+import de.telran.shop210125mbe.pojo.User;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 

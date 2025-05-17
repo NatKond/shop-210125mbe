@@ -1,7 +1,7 @@
 package de.telran.shop210125mbe.service;
 
-import de.telran.shop210125mbe.model.Order;
-import de.telran.shop210125mbe.model.Status;
+import de.telran.shop210125mbe.pojo.Order;
+import de.telran.shop210125mbe.pojo.Status;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Component;
 

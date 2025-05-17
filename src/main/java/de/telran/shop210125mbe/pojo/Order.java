@@ -1,4 +1,4 @@
-package de.telran.shop210125mbe.model;
+package de.telran.shop210125mbe.pojo;
 
 import java.sql.Timestamp;
 import java.util.Objects;

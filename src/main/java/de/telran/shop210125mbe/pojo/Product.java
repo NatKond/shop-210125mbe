@@ -1,4 +1,4 @@
-package de.telran.shop210125mbe.model;
+package de.telran.shop210125mbe.pojo;
 
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;

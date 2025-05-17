@@ -1,7 +1,6 @@
 package de.telran.shop210125mbe.controller;
 
-import de.telran.shop210125mbe.model.Category;
-import de.telran.shop210125mbe.model.Order;
+import de.telran.shop210125mbe.pojo.Order;
 import de.telran.shop210125mbe.service.OrderServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

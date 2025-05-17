@@ -1,12 +1,11 @@
 package de.telran.shop210125mbe.controller;
 
 
-import de.telran.shop210125mbe.model.Product;
+import de.telran.shop210125mbe.pojo.Product;
 import de.telran.shop210125mbe.service.ProductServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,7 +14,9 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/product") // localhost:8080/product
 public class ProductController {
+
     @Autowired
+    @Qualifier("productJdbc")
     ProductServiceInterface productServiceInterface; // = new ProductServiceList();
 
     @GetMapping

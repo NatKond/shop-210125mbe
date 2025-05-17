@@ -1,14 +1,14 @@
 package de.telran.shop210125mbe.service;
 
 import de.telran.shop210125mbe.jdbc.CategoryDbInterface;
-import de.telran.shop210125mbe.model.Category;
+import de.telran.shop210125mbe.pojo.Category;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Primary;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service("categoryJdbc")
 // имя компонента в контенере по умолчению будет categoryServiceDbJdbc
@@ -20,26 +20,38 @@ public class CategoryServiceDbJdbc implements CategoryServiceInterface {
 
     @Override
     public List<Category> getAllCategories() {
-        ArrayList<Category> categories = new ArrayList<>();
-        for (int i = 1; i < 5; i++) {
-            categories.add(categoryDbInterface.findById(i));
+        try {
+            return categoryDbInterface.findAll();
+        } catch (EmptyResultDataAccessException e) {
+            return null;
         }
-        return categories;
     }
 
     @Override
     public Category getCategoryById(Long id) {
-        return categoryDbInterface.findById(id);
+        try {
+            return categoryDbInterface.findById(id);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
     public Category createCategory(Category newCategory) {
-        return null;
+        try {
+            return categoryDbInterface.save(newCategory);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
     public Category updateCategory(Long id, Category updatedCategory) {
-        return null;
+        try {
+            return categoryDbInterface.update(id, updatedCategory);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
     }
 
     @Override
@@ -49,6 +61,6 @@ public class CategoryServiceDbJdbc implements CategoryServiceInterface {
 
     @Override
     public Boolean deleteCategoryById(Long id) {
-        return null;
+        return categoryDbInterface.delete(id);
     }
 }

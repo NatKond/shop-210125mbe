@@ -1,11 +1,10 @@
 package de.telran.shop210125mbe.controller;
 
-import de.telran.shop210125mbe.model.Category;
-import de.telran.shop210125mbe.model.User;
+import de.telran.shop210125mbe.pojo.User;
 import de.telran.shop210125mbe.service.UserServiceInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,6 +13,7 @@ import java.util.List;
 @RequestMapping(value = "/user")
 public class UserController {
     @Autowired
+    @Qualifier("userJdbc")
     UserServiceInterface userServiceInterface;
 
     @GetMapping

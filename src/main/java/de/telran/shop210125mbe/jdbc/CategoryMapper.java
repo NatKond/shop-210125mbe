@@ -1,6 +1,6 @@
 package de.telran.shop210125mbe.jdbc;
 
-import de.telran.shop210125mbe.model.Category;
+import de.telran.shop210125mbe.pojo.Category;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -10,7 +10,7 @@ public class CategoryMapper implements RowMapper<Category> {
 
     @Override
     public Category mapRow(ResultSet rs, int rowNum) throws SQLException {
-        final long id = rs.getInt("CategoryID");
+        final Long id = rs.getLong("CategoryID");
         final String name = rs.getString("Name");
         return new Category(id, name);
     }
