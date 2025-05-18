@@ -22,7 +22,7 @@ public class CartDbJdbcTemplate implements CartDbInterface {
                 Map.of("ID", cart.getCartId(),
                         "UserId", cart.getUserId())
         );
-        String sql = "insert into Carts (CartId, UserId) values (:ID, :UserId)";
+        String sql = "insert into Cart (CartID, UserID) values (:ID, :UserId)";
         jdbcTemplate.update(sql, params);
         return findById(cart.getCartId());
     }
@@ -30,13 +30,13 @@ public class CartDbJdbcTemplate implements CartDbInterface {
     @Override
     public Cart findById(Long id) {
         Map<String, Object> params = new HashMap<>(Map.of("ID", id));
-        String sql = "select * from Carts where CartId=:ID";
+        String sql = "select * from Cart where CartID=:ID";
         return jdbcTemplate.queryForObject(sql, params, new BeanPropertyRowMapper<>(Cart.class));
     }
 
     @Override
     public List<Cart> findAll() {
-        String sql = "select * from Carts";
+        String sql = "select * from Cart";
         return jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(Cart.class));
     }
 
@@ -44,16 +44,16 @@ public class CartDbJdbcTemplate implements CartDbInterface {
     public Cart update(Long id, Cart cart) {
         Map<String, Object> params = new HashMap<>(
                 Map.of("ID", id,
-                        "UserId", cart.getUserId())
+                        "UserID", cart.getUserId())
         );
-        String sql = "update Carts set UserId=:UserId where CartId=:ID";
+        String sql = "update Cart set UserID=:UserId where CartID=:ID";
         return jdbcTemplate.update(sql, params) > 0 ? findById(id) : save(cart);
     }
 
     @Override
     public boolean delete(long id) {
         Map<String, Object> params = new HashMap<>(Map.of("ID", id));
-        String sql = "delete from Carts where CartId=:ID";
+        String sql = "delete from Cart where CartID=:ID";
         return jdbcTemplate.update(sql, params) > 0;
     }
 }

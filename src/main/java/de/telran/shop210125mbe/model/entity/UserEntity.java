@@ -4,9 +4,12 @@ import de.telran.shop210125mbe.pojo.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 
-//@Data
-//@Entity
-//@Table(name = "Users")
+import java.util.HashSet;
+import java.util.Set;
+
+@Data
+@Entity
+@Table(name = "Users")
 public class UserEntity {
 
     @Id // эта колонка должна быть уникальной в таблице и не повторяться
@@ -30,7 +33,9 @@ public class UserEntity {
     @Column(name = "Role")
     private Role role;
 
-    @OneToOne(mappedBy = "user",fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
     private CartEntity cart;
 
+    @OneToMany(mappedBy = "user")
+    private Set<FavoriteEntity> favorites = new HashSet<>();
 }

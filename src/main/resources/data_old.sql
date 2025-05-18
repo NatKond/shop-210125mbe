@@ -16,7 +16,7 @@ INSERT INTO Users (UserID, Name, Email, PhoneNumber, PasswordHash, Role) VALUES
 (3, 'Carol Lee', 'carol.lee@example.com', '+1122334455', 'hashed_password_3', 'CLIENT'),
 (4, 'David Brown', 'david.brown@example.com', '+1222333444', 'hashed_password_4', 'CLIENT');
 
-INSERT INTO Carts (CartId, UserId) VALUES
+INSERT INTO Cart (CartId, UserId) VALUES
 (1, 1),
 (2, 2),
 (3, 3),

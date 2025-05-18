@@ -3,10 +3,12 @@ package de.telran.shop210125mbe.model.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.sql.Timestamp;
+import java.util.HashSet;
+import java.util.Set;
 
-//@Data
-//@Entity
-//@Table(name = "Product")
+@Data
+@Entity
+@Table(name = "Products")
 public class ProductEntity {
 
     @Id
@@ -41,5 +43,14 @@ public class ProductEntity {
     @ManyToOne//(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "CategoryID") // имя колонки для связи с CategoriesEntity
     private CategoryEntity category;
+
+    @OneToMany(mappedBy = "product")
+    private Set<CartItemEntity> cartItems = new HashSet<>();
+
+    @OneToMany(mappedBy = "product")
+    private Set<FavoriteEntity> favorites = new HashSet<>();
+
+    @OneToMany(mappedBy = "product")
+    private Set<OrderItemEntity> orderItemEntities = new HashSet<>();
 
 }
