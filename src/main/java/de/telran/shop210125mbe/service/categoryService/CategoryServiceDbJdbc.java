@@ -1,4 +1,4 @@
-package de.telran.shop210125mbe.service;
+package de.telran.shop210125mbe.service.categoryService;
 
 import de.telran.shop210125mbe.jdbc.CategoryDbInterface;
 import de.telran.shop210125mbe.pojo.Category;
@@ -8,7 +8,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 @Service("categoryJdbc")
 // имя компонента в контенере по умолчению будет categoryServiceDbJdbc

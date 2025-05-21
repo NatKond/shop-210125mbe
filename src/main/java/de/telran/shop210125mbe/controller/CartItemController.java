@@ -1,7 +1,8 @@
 package de.telran.shop210125mbe.controller;
 
 import de.telran.shop210125mbe.pojo.CartItem;
-import de.telran.shop210125mbe.service.CartItemServiceInterface;
+import de.telran.shop210125mbe.service.cartItemService.CartItemServiceInterface;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -10,10 +11,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/cartItem")
+@RequiredArgsConstructor
 public class CartItemController {
 
-    @Autowired
-    CartItemServiceInterface cartItemServiceInterface;
+//    @Autowired
+    private final CartItemServiceInterface cartItemServiceInterface;
 
     @GetMapping
     public List<CartItem> getAllCartItems() {

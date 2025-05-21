@@ -1,10 +1,16 @@
 package de.telran.shop210125mbe.model.entity;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.text.DecimalFormat;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@ToString
+@EqualsAndHashCode
+@Builder
 @Entity
 @Table(name = "OrderItems")
 public class OrderItemEntity {

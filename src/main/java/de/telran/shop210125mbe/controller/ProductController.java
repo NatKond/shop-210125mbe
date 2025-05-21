@@ -1,8 +1,11 @@
 package de.telran.shop210125mbe.controller;
 
 
+import de.telran.shop210125mbe.model.dto.ProductDto;
 import de.telran.shop210125mbe.pojo.Product;
-import de.telran.shop210125mbe.service.ProductServiceInterface;
+import de.telran.shop210125mbe.service.productService.ProductServiceInterface;
+import de.telran.shop210125mbe.service.productService.ProductServiceJpa;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -13,52 +16,55 @@ import java.util.List;
 // HTTP: GET(получение), POST(передача), PUT(вставка), PATCH(редактирование), DELETE(удаление)
 @RestController
 @RequestMapping(value = "/product") // localhost:8080/product
+@RequiredArgsConstructor
 public class ProductController {
 
-    @Autowired
-    @Qualifier("productJdbc")
-    ProductServiceInterface productServiceInterface; // = new ProductServiceList();
+//    @Autowired
+//    @Qualifier("productJdbc")
+//    ProductServiceInterface productServiceInterface; // = new ProductServiceList();
+
+    private final ProductServiceJpa productServiceJpa;
 
     @GetMapping
-    public List<Product> getAllProducts() {
+    public List<ProductDto> getAllProducts() {
         System.out.println("Get all products");
-        return productServiceInterface.getAllProducts();
+        return productServiceJpa.getAllProducts();
     }
 
     @GetMapping("/{id}") // http://localhost:8080/product/find/1
-    public Product getProduct(@PathVariable(name = "id") Long productId) {
+    public ProductDto getProduct(@PathVariable(name = "id") Long productId) {
         System.out.println("Get " + productId + " product");
-        return productServiceInterface.getProductById(productId);
+        return productServiceJpa.getProductById(productId);
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public Product insertProduct(@RequestBody Product newProduct) {
+    public ProductDto insertProduct(@RequestBody ProductDto newProductDto) {
         System.out.println("Insert product");
-        return productServiceInterface.insertProduct(newProduct);
+        return productServiceJpa.insertProduct(newProductDto);
     }
 
     // обновление всего объекта, если объекта не существует, мы должны создать новый
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{id}")
-    public Product updateProduct(@PathVariable(name = "id") Long productId, @RequestBody Product updatedProduct) {
+    public ProductDto updateProduct(@PathVariable(name = "id") Long productId, @RequestBody ProductDto updatedProductDto) {
         System.out.println("Update " + productId + " product");
-        return productServiceInterface.updateProduct(productId, updatedProduct);
+        return productServiceJpa.updateProduct(productId, updatedProductDto);
     }
 
     // обновление части информации, если объекта не существует, новый не создаем
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PatchMapping("/{id}")
-    public Product updatePartProduct(@PathVariable(name = "id") Long productId, @RequestBody Product updatedProduct) {
+    public ProductDto updatePartProduct(@PathVariable(name = "id") Long productId, @RequestBody ProductDto updatedProductDto) {
         System.out.println("Update " + productId + " product partially");
-        return productServiceInterface.updatePartProduct(productId, updatedProduct);
+        return productServiceJpa.updatePartProduct(productId, updatedProductDto);
     }
 
     //удаление
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable(name = "id") Long productId) {
         System.out.println("Delete " + productId + " product");
-        productServiceInterface.deleteProductById(productId);
+        productServiceJpa.deleteProductById(productId);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

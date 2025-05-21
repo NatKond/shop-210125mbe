@@ -1,9 +1,15 @@
 package de.telran.shop210125mbe.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@ToString
+@EqualsAndHashCode
+@Builder
 @Entity
 @Table(name = "Favorites")
 public class FavoriteEntity {

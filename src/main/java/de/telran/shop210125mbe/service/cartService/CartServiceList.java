@@ -1,4 +1,4 @@
-package de.telran.shop210125mbe.service;
+package de.telran.shop210125mbe.service.cartService;
 
 import de.telran.shop210125mbe.pojo.Cart;
 import jakarta.annotation.PostConstruct;

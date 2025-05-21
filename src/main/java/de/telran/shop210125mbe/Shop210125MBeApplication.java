@@ -12,9 +12,8 @@ public class Shop210125MBeApplication {
         //SpringApplication.run(Shop210125MBeApplication.class, args);
 
         ApplicationContext applicationContext = SpringApplication.run(Shop210125MBeApplication.class, args);
-        Product product = (Product) applicationContext.getBean(Product.class);
-
         // Product product = new Product();
+        Product product = (Product) applicationContext.getBean(Product.class);
         product.setProductId(1L);
         product.setName("Carrot");
         System.out.println(product);

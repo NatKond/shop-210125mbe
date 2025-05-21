@@ -1,12 +1,18 @@
 package de.telran.shop210125mbe.model.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@ToString
+@EqualsAndHashCode
+@Builder
 @Entity
 @Table(name = "Cart")
 public class CartEntity {
@@ -22,5 +28,4 @@ public class CartEntity {
 
     @OneToMany(mappedBy = "cart")
     private Set<CartItemEntity> cartItems = new HashSet<>();
-
 }

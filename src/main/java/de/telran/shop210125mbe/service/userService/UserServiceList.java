@@ -1,4 +1,4 @@
-package de.telran.shop210125mbe.service;
+package de.telran.shop210125mbe.service.userService;
 
 import de.telran.shop210125mbe.pojo.Role;
 import de.telran.shop210125mbe.pojo.User;

@@ -1,7 +1,10 @@
 package de.telran.shop210125mbe.controller;
 
 import de.telran.shop210125mbe.pojo.Favorite;
-import de.telran.shop210125mbe.service.FavoriteServiceInterface;
+import de.telran.shop210125mbe.pojo.User;
+import de.telran.shop210125mbe.service.favoriteService.FavoriteServiceInterface;
+import de.telran.shop210125mbe.service.favoriteService.FavoriteServiceJpa;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,14 +12,21 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/favorite")
+@RequiredArgsConstructor
 public class FavoriteController {
-    @Autowired
-    FavoriteServiceInterface favoriteServiceInterface;
+
+    private final FavoriteServiceJpa favoriteServiceJpa;
 
     @GetMapping
     public List<Favorite> getAllFavorites(){
         System.out.println("Get all favorites");
-        return favoriteServiceInterface.getAllFavorites();
+        return favoriteServiceJpa.getAllFavorites();
+    }
+
+    @GetMapping("/{id}")
+    public Favorite getFavorite(@PathVariable Long id) {
+        System.out.println("Get " + id + " favorite");
+        return favoriteServiceJpa.getFavoriteById(id);
     }
 
     @PostMapping

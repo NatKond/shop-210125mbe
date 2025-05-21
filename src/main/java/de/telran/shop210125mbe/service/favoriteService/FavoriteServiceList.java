@@ -1,4 +1,4 @@
-package de.telran.shop210125mbe.service;
+package de.telran.shop210125mbe.service.favoriteService;
 
 import de.telran.shop210125mbe.pojo.Favorite;
 import jakarta.annotation.PostConstruct;
@@ -23,5 +23,30 @@ public class FavoriteServiceList implements FavoriteServiceInterface{
     @Override
     public List<Favorite> getAllFavorites() {
         return localeStorage;
+    }
+
+    @Override
+    public Favorite getFavoriteById(Long id) {
+        return null;
+    }
+
+    @Override
+    public Favorite createFavorite(Favorite newFavorite) {
+        return null;
+    }
+
+    @Override
+    public Favorite updateFavorite(Long id, Favorite updatedFavorite) {
+        return null;
+    }
+
+    @Override
+    public Favorite updatePartFavorite(Long id, Favorite updatedFavorite) {
+        return null;
+    }
+
+    @Override
+    public Boolean deleteFavoriteById(Long id) {
+        return null;
     }
 }

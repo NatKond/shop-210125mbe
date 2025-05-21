@@ -1,4 +1,4 @@
-package de.telran.shop210125mbe.service;
+package de.telran.shop210125mbe.service.orderService;
 
 import de.telran.shop210125mbe.pojo.Order;
 import de.telran.shop210125mbe.pojo.Status;

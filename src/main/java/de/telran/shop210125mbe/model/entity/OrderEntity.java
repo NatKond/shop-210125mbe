@@ -2,13 +2,19 @@ package de.telran.shop210125mbe.model.entity;
 
 import de.telran.shop210125mbe.pojo.Status;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@ToString
+@EqualsAndHashCode
+@Builder
 @Entity
 @Table(name = "Orders")
 public class OrderEntity {

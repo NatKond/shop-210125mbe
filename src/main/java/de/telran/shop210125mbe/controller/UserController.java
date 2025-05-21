@@ -1,7 +1,12 @@
 package de.telran.shop210125mbe.controller;
 
+import de.telran.shop210125mbe.model.dto.UserDto;
+import de.telran.shop210125mbe.model.dto.UserLimitedDto;
 import de.telran.shop210125mbe.pojo.User;
-import de.telran.shop210125mbe.service.UserServiceInterface;
+import de.telran.shop210125mbe.service.userService.UserServiceInterface;
+import de.telran.shop210125mbe.service.userService.UserServiceJpa;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -9,47 +14,52 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@RequiredArgsConstructor // будет создан кнструктор, аргументом которого будет поле private final
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
-    @Autowired
-    @Qualifier("userJdbc")
-    UserServiceInterface userServiceInterface;
+
+//    @Autowired
+//    @Qualifier("userServiceJpa")
+//    @NonNull
+//    private final UserServiceInterface userServiceInterface;
+
+    private final UserServiceJpa userServiceJpa;
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<UserLimitedDto> getAllUsers() {
         System.out.println("Get all users");
-        return userServiceInterface.getAllUsers();
+        return userServiceJpa.getAllUsers();
     }
 
     @GetMapping("/{id}")
-    public User getUser(@PathVariable Long id) {
+    public UserDto getUser(@PathVariable Long id) {
         System.out.println("Get " + id + " user");
-        return userServiceInterface.getUserById(id);
+        return userServiceJpa.getUserById(id);
     }
 
     @PostMapping
-    public User createUser(@RequestBody User newUser) {
+    public UserDto createUser(@RequestBody UserDto newUserDto) {
         System.out.println("Insert user");
-        return userServiceInterface.createUser(newUser);
+        return userServiceJpa.createUser(newUserDto);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
+    public UserDto updateUser(@PathVariable Long id, @RequestBody UserDto updatedUserDto) {
         System.out.println("Update user");
-        return userServiceInterface.updateUser(id, updatedUser);
+        return userServiceJpa.updateUser(id, updatedUserDto);
     }
 
     @PatchMapping("/{id}")
-    public User updatePartUser(@PathVariable Long id, @RequestBody User updatedUser) {
+    public UserDto updatePartUser(@PathVariable Long id, @RequestBody UserDto updatedUserDto) {
         System.out.println("Update user partially");
-        return userServiceInterface.updatePartUser(id, updatedUser);
+        return userServiceJpa.updatePartUser(id, updatedUserDto);
     }
 
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         System.out.println("Delete user");
-        userServiceInterface.deleteUserById(id);
+        userServiceJpa.deleteUserById(id);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)

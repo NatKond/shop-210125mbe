@@ -1,7 +1,8 @@
 package de.telran.shop210125mbe.controller;
 
 import de.telran.shop210125mbe.pojo.OrderItem;
-import de.telran.shop210125mbe.service.OrderItemServiceInterface;
+import de.telran.shop210125mbe.service.orderItemService.OrderItemServiceInterface;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,10 +10,11 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/orderItem")
+@RequiredArgsConstructor
 public class OrderItemController {
 
-    @Autowired
-    OrderItemServiceInterface orderItemServiceInterface;
+//    @Autowired
+    private final OrderItemServiceInterface orderItemServiceInterface;
 
     @GetMapping
     public List<OrderItem> getAllOrderItems(){

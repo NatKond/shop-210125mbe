@@ -1,4 +1,4 @@
-package de.telran.shop210125mbe.service;
+package de.telran.shop210125mbe.service.categoryService;
 
 import de.telran.shop210125mbe.pojo.Category;
 
@@ -8,7 +8,7 @@ public interface CategoryServiceInterface {
 
     List<Category> getAllCategories();
 
-    Category getCategoryById(Long id) ;
+    Category getCategoryById(Long id);
 
     Category createCategory(Category newCategory);
 

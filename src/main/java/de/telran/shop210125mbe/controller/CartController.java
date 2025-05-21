@@ -1,7 +1,8 @@
 package de.telran.shop210125mbe.controller;
 
 import de.telran.shop210125mbe.pojo.Cart;
-import de.telran.shop210125mbe.service.CartServiceInterface;
+import de.telran.shop210125mbe.service.cartService.CartServiceInterface;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -12,11 +13,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/cart")
+@RequiredArgsConstructor
 public class CartController {
 
-    @Autowired
+//    @Autowired
     @Qualifier("cartJdbc")
-    CartServiceInterface cartServiceInterface;
+    private final CartServiceInterface cartServiceInterface;
 
     @GetMapping
     public ResponseEntity<?> getAllCarts() {
