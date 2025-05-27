@@ -18,4 +18,6 @@ public class UserLimitedDto {
 
     private String email;
 
+    private String phoneNumber;
+
 }

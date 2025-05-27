@@ -38,22 +38,50 @@ public class UserController {
         return userServiceJpa.getUserById(id);
     }
 
+    @GetMapping("/email/{valueEmail}")  // http://localhost:8080/user/email/a@i.com
+    public  UserDto getByEmail(@PathVariable String valueEmail) {
+        return userServiceJpa.getByEmail(valueEmail);
+    }
+
+    @GetMapping("/name/{valueName}")  // http://localhost:8080/user/name/Alice%20Johnson
+    public  List<UserDto> getByName(@PathVariable String valueName) {
+        return userServiceJpa.getByName(valueName);
+    }
+
+    @GetMapping("/phone/{valuePhone}") // http://localhost:8080/user/phone/%201234567890
+    public UserDto getByPhoneNumber(@PathVariable String valuePhoneNumber){
+        return userServiceJpa.getByPhone(valuePhoneNumber);
+    }
+
+    @GetMapping("/find") // localhost:8080/user/find?name=Alice&email=alice.johnson@example.com
+    public List<UserLimitedDto> getByNameAndEmail(@RequestParam String name, @RequestParam(name="email") String valueEmail){
+        return userServiceJpa.getByNameAndEmail(name, valueEmail);
+    }
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public UserDto createUser(@RequestBody UserDto newUserDto) {
         System.out.println("Insert user");
         return userServiceJpa.createUser(newUserDto);
     }
 
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{id}")
     public UserDto updateUser(@PathVariable Long id, @RequestBody UserDto updatedUserDto) {
         System.out.println("Update user");
         return userServiceJpa.updateUser(id, updatedUserDto);
     }
 
+    @ResponseStatus(HttpStatus.ACCEPTED)
     @PatchMapping("/{id}")
     public UserDto updatePartUser(@PathVariable Long id, @RequestBody UserDto updatedUserDto) {
         System.out.println("Update user partially");
         return userServiceJpa.updatePartUser(id, updatedUserDto);
+    }
+
+    @PatchMapping("/phone/{id}") // http://localhost:8080/user/phone/1?phone=+1234567890&name=Odarka
+    public UserLimitedDto updatePhoneNumber(@PathVariable Long id, @RequestParam String phoneNumber) {
+        System.out.println("Update user phone number");
+        return userServiceJpa.updatePhoneNumber(id, phoneNumber);
     }
 
     @DeleteMapping("/{id}")

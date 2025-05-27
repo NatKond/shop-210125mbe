@@ -69,6 +69,7 @@ public class UserServiceJpa{
                         .userId(userEntity.getUserId())
                         .name(userEntity.getName())
                         .email(userEntity.getEmail())
+                        .phoneNumber(userEntity.getPhoneNumber())
                         .build())
                 .collect(Collectors.toList());
     }
@@ -84,6 +85,44 @@ public class UserServiceJpa{
                 .passwordHash("*********")
                 .role(userEntity.getRole().name())
                 .build();
+    }
+
+    public UserDto getByEmail(String valueEmail) {
+        //Вызываем самостоятельно описанный метод из репозитория
+        UserEntity returnUserEntity = userRepository.findByEmailNativeQuery(valueEmail).orElseThrow(() -> new NoSuchElementException("User with email = " + valueEmail + " is not found."));
+
+        //Трансформируем в Dto
+        UserDto returnUserDto = UserDto.builder()
+                .userId(returnUserEntity.getUserId())
+                .email(returnUserEntity.getEmail())
+                .name(returnUserEntity.getName())
+                .role(returnUserEntity.getRole().toString())
+                .phoneNumber(returnUserEntity.getPhoneNumber())
+                .passwordHash("******")
+                .build();
+
+        return returnUserDto;
+    }
+
+    public List<UserDto> getByName(String valueName) {
+        //Вызываем самостоятельно описанный метод из репозитория
+        List<UserEntity> returnUsersEntity = userRepository.findByNameHql(valueName);
+
+        //Трансформируем в List Dto
+        List<UserDto> returnUsersDto =
+                returnUsersEntity.stream()
+                        .map(userEntity ->
+                                UserDto.builder()
+                                        .userId(userEntity.getUserId())
+                                        .email(userEntity.getEmail())
+                                        .name(userEntity.getName())
+                                        .role(userEntity.getRole().toString())
+                                        .phoneNumber(userEntity.getPhoneNumber())
+                                        .passwordHash("******")
+                                        .build())
+                        .collect(Collectors.toList());
+
+        return returnUsersDto;
     }
 
     public UserDto createUser(UserDto newUserDto) {
@@ -143,5 +182,42 @@ public class UserServiceJpa{
 
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public UserLimitedDto updatePhoneNumber(Long id, String phoneNumber) {
+        if (userRepository.setPhoneNumber(id, phoneNumber) < 0){
+         throw new NoSuchElementException("User with id = " + id + " is not found.");
+        }
+        UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User with id = " + id + " is not found."));
+        return UserLimitedDto.builder()
+                .userId(userEntity.getUserId())
+                .name(userEntity.getName())
+                .email(userEntity.getEmail())
+                .phoneNumber(userEntity.getPhoneNumber())
+                .build();
+    }
+
+    public List<UserLimitedDto> getByNameAndEmail(String name, String valueEmail) {
+        List<UserEntity> userEntities = userRepository.findByNameContainingAndEmail(name, valueEmail);
+        return userEntities.stream()
+                .map(userEntity -> UserLimitedDto.builder()
+                        .userId(userEntity.getUserId())
+                        .email(userEntity.getEmail())
+                        .name(userEntity.getName())
+                        .phoneNumber(userEntity.getPhoneNumber())
+                        .build())
+                .collect(Collectors.toList());
+    }
+
+    public UserDto getByPhone(String valuePhoneNumber) {
+        UserEntity userEntity = userRepository.findUserByPhoneNumber(valuePhoneNumber).orElseThrow(() -> new NoSuchElementException("User with phone number = " + valuePhoneNumber + " is not found."));
+        return UserDto.builder()
+                .userId(userEntity.getUserId())
+                .email(userEntity.getEmail())
+                .name(userEntity.getName())
+                .role(userEntity.getRole().toString())
+                .phoneNumber(userEntity.getPhoneNumber())
+                .passwordHash("******")
+                .build();
     }
 }

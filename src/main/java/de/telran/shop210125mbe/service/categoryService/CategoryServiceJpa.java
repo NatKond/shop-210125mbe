@@ -5,7 +5,10 @@ import de.telran.shop210125mbe.model.entity.CategoryEntity;
 import de.telran.shop210125mbe.repository.CategoryRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,26 +18,32 @@ public class CategoryServiceJpa {
 
     private final CategoryRepository categoryRepository;
 
-    @PostConstruct
+    // @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
+    @Transactional
     void init() {
         // создадим категории
-//        CategoryEntity category1 = CategoryEntity.builder()
-//                .name("Garden Tools")
-//                .build();
-//
-//        CategoryEntity category2 = CategoryEntity.builder()
-//                .name("Outdoor Power Equipment")
-//                .build();
-//
-//        CategoryEntity category3 = CategoryEntity.builder()
-//                .name("Watering Equipment")
-//                .build();
-//
-//        categoryRepository.save(category1);
-//        categoryRepository.save(category2);
-//        categoryRepository.save(category3);
+        CategoryEntity category1 = CategoryEntity.builder()
+                .name("Garden Tools")
+                .build();
+
+        CategoryEntity category2 = CategoryEntity.builder()
+                .name("Outdoor Power Equipment")
+                .build();
+
+        CategoryEntity category3 = CategoryEntity.builder()
+                .name("Watering Equipment")
+                .build();
+
+        categoryRepository.save(category1);
+        categoryRepository.save(category2);
+        categoryRepository.save(category3);
     }
 
+    // @Transactional
+    public CategoryEntity getCategoryReferenceById(Long id){
+        return categoryRepository.findById(id).orElse(null);
+    }
 
     public List<CategoryDto> getAllCategories() {
         return categoryRepository.findAll().stream()
