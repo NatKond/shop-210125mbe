@@ -37,6 +37,18 @@ public class ProductController {
         return productServiceJpa.getProductById(productId);
     }
 
+    @GetMapping("/name/{name}") // http://localhost:8080/product/name/Pruning%20Shears
+    public ProductDto getProductByName(@PathVariable String name) {
+        System.out.println("Get " + name + " product");
+        return productServiceJpa.getProductByName(name);
+    }
+
+    @GetMapping("/discount")
+    public List<ProductDto>  getProductsWithDiscount() {
+        System.out.println("Get all products with discount");
+        return productServiceJpa.getProductsWithDiscountPrice();
+    }
+
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ProductDto insertProduct(@RequestBody ProductDto newProductDto) {

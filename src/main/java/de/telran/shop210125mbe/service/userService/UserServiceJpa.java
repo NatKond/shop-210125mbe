@@ -210,7 +210,7 @@ public class UserServiceJpa{
     }
 
     public UserDto getByPhone(String valuePhoneNumber) {
-        UserEntity userEntity = userRepository.findUserByPhoneNumber(valuePhoneNumber).orElseThrow(() -> new NoSuchElementException("User with phone number = " + valuePhoneNumber + " is not found."));
+        UserEntity userEntity = userRepository.findByPhoneNumber(valuePhoneNumber).orElseThrow(() -> new NoSuchElementException("User with phone number = " + valuePhoneNumber + " is not found."));
         return UserDto.builder()
                 .userId(userEntity.getUserId())
                 .email(userEntity.getEmail())

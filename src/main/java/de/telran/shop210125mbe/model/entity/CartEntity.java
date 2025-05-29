@@ -22,7 +22,7 @@ public class CartEntity {
     @Column(name = "CartID")
     private Long cartId;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "UserID", referencedColumnName = "userId")
     private UserEntity user;
 

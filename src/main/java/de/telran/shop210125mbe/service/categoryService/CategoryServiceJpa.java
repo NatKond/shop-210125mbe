@@ -10,7 +10,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -18,9 +20,9 @@ public class CategoryServiceJpa {
 
     private final CategoryRepository categoryRepository;
 
-    // @PostConstruct
-    @EventListener(ApplicationReadyEvent.class)
-    @Transactional
+    @PostConstruct
+    // @EventListener(ApplicationReadyEvent.class)
+    // @Transactional
     void init() {
         // создадим категории
         CategoryEntity category1 = CategoryEntity.builder()
@@ -40,29 +42,21 @@ public class CategoryServiceJpa {
         categoryRepository.save(category3);
     }
 
-    // @Transactional
-    public CategoryEntity getCategoryReferenceById(Long id){
-        return categoryRepository.findById(id).orElse(null);
-    }
-
     public List<CategoryDto> getAllCategories() {
         return categoryRepository.findAll().stream()
                 .map((categoryEntity) -> CategoryDto.builder()
                         .categoryId(categoryEntity.getCategoryId())
                         .name(categoryEntity.getName())
                         .build())
-                .toList();
+                .collect(Collectors.toList());
     }
 
     public CategoryDto getCategoryById(Long id) {
         CategoryEntity categoryEntity = categoryRepository.findById(id).orElse(null);
-        if (categoryEntity == null) {
-            return null;
-        }
-        return CategoryDto.builder()
+        return categoryEntity != null ? CategoryDto.builder()
                 .categoryId(categoryEntity.getCategoryId())
                 .name(categoryEntity.getName())
-                .build();
+                .build() : null;
     }
 
     public CategoryDto createCategory(CategoryDto newCategoryDto) {

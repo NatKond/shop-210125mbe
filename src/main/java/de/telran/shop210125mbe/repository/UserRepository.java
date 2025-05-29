@@ -22,7 +22,7 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
     @Query(nativeQuery = false, value = "SELECT ue FROM UserEntity ue WHERE ue.name=?1")
     List<UserEntity> findByNameHql(String name);
 
-    Optional<UserEntity> findUserByPhoneNumber(String phoneNumber);
+    Optional<UserEntity> findByPhoneNumber(String phoneNumber);
 
     // Update phoneNumber
     @Modifying

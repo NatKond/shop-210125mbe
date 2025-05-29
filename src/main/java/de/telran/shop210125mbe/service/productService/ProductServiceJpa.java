@@ -27,8 +27,8 @@ public class ProductServiceJpa{
     private final CategoryRepository categoryRepository;
     // private final CategoryServiceJpa categoryServiceJpa;
 
-    @PostConstruct
-    //@EventListener(ApplicationReadyEvent.class)
+    // @PostConstruct
+    @EventListener(ApplicationReadyEvent.class)
     @Transactional
     void init(){
         // заполним таблицу Product тестовыми данными
@@ -43,8 +43,9 @@ public class ProductServiceJpa{
                 .category(categoryRepository.findById(1L).orElse(null))
                 .build();
         // product1.setProductId(...); // это поле должно быть сгенерировано бд
-        ProductEntity productNew1 = productRepository.save(product1); // сохраняем в базу данных
-        System.out.println("productNew1 = " + productNew1);
+        //ProductEntity productNew1 =
+                productRepository.save(product1); // сохраняем в базу данных
+//        System.out.println("productNew1 = " + productNew1);
 
         product1.setPrice(29.99);
         product1.setDiscountPrice(19.99);
@@ -66,7 +67,6 @@ public class ProductServiceJpa{
         ProductEntity product3 = ProductEntity.builder()
                 .name("Gas Lawn Mower")
                 .price(349.99)
-                .discountPrice(299.99)
                 .description("Gas-powered lawn mower with 21-inch cutting deck")
                 .imageUrl("https://example.com/images/lawn_mower.jpg")
                 .createdAt(new Timestamp(System.currentTimeMillis()))
@@ -120,6 +120,41 @@ public class ProductServiceJpa{
                 .updatedAt(productEntity.getUpdatedAt())
                 .categoryId(productEntity.getCategory().getCategoryId())
                 .build();
+    }
+
+
+    public ProductDto getProductByName(String name){
+        ProductEntity productEntity = productRepository.findByName(name).orElseThrow(() -> new NoSuchElementException("Product with name = " + name + " is not found."));
+        return ProductDto.builder()
+                .productId(productEntity.getProductId())
+                .name(productEntity.getName())
+                .description(productEntity.getDescription())
+                .price(productEntity.getPrice())
+                .imageUrl(productEntity.getImageUrl())
+                .discountPrice(productEntity.getDiscountPrice())
+                .createdAt(productEntity.getCreatedAt())
+                .updatedAt(productEntity.getUpdatedAt())
+                .categoryId(productEntity.getCategory().getCategoryId())
+                .build();
+    }
+
+    public List<ProductDto> getProductsWithDiscountPrice(){
+        List<ProductEntity> productEntities = productRepository.findAllWithDiscountPrice();
+        List<ProductDto> result = new ArrayList<>();
+        for (ProductEntity productEntity : productEntities) {
+            ProductDto productDto = new ProductDto(productEntity.getProductId(),
+                    productEntity.getName(),
+                    productEntity.getDescription(),
+                    productEntity.getPrice(),
+                    productEntity.getImageUrl(),
+                    productEntity.getDiscountPrice(),
+                    productEntity.getCreatedAt(),
+                    productEntity.getUpdatedAt(),
+                    productEntity.getCategory().getCategoryId()
+            );
+            result.add(productDto);
+        }
+        return result ;
     }
 
     public ProductDto insertProduct(ProductDto newProductDto) {

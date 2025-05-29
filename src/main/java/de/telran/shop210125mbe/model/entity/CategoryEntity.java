@@ -25,7 +25,7 @@ public class CategoryEntity {
         @Column(name = "Name")
         private String name;
 
-        @OneToMany(mappedBy = "category", fetch = FetchType.EAGER)
+        @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
         // @OneToMany(mappedBy = "category")
         private Set<ProductEntity> products = new HashSet<>();
 }
