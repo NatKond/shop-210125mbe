@@ -1,5 +1,6 @@
 package de.telran.shop210125mbe.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -7,8 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString
-@EqualsAndHashCode
+//@EqualsAndHashCode
+//@ToString
 @Builder
 @Entity
 @Table(name = "Favorites")

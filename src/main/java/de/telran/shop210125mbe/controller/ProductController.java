@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static de.telran.shop210125mbe.textFormatting.RESET;
+import static de.telran.shop210125mbe.textFormatting.YELLOW;
+
 // HTTP: GET(получение), POST(передача), PUT(вставка), PATCH(редактирование), DELETE(удаление)
 @RestController
 @RequestMapping(value = "/product") // localhost:8080/product
@@ -27,32 +30,32 @@ public class ProductController {
 
     @GetMapping
     public List<ProductDto> getAllProducts() {
-        System.out.println("Get all products");
+        System.out.println(YELLOW + "Get all products" + RESET);
         return productServiceJpa.getAllProducts();
     }
 
     @GetMapping("/{id}") // http://localhost:8080/product/find/1
     public ProductDto getProduct(@PathVariable(name = "id") Long productId) {
-        System.out.println("Get " + productId + " product");
+        System.out.println("Get " + productId + " product" + RESET);
         return productServiceJpa.getProductById(productId);
     }
 
     @GetMapping("/name/{name}") // http://localhost:8080/product/name/Pruning%20Shears
     public ProductDto getProductByName(@PathVariable String name) {
-        System.out.println("Get " + name + " product");
+        System.out.println(YELLOW + "Get " + name + " product" + RESET);
         return productServiceJpa.getProductByName(name);
     }
 
     @GetMapping("/discount")
-    public List<ProductDto>  getProductsWithDiscount() {
-        System.out.println("Get all products with discount");
+    public List<ProductDto> getProductsWithDiscount() {
+        System.out.println(YELLOW + "Get all products with discount" + RESET);
         return productServiceJpa.getProductsWithDiscountPrice();
     }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
     public ProductDto insertProduct(@RequestBody ProductDto newProductDto) {
-        System.out.println("Insert product");
+        System.out.println(YELLOW + "Insert product" + RESET);
         return productServiceJpa.insertProduct(newProductDto);
     }
 
@@ -60,7 +63,7 @@ public class ProductController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{id}")
     public ProductDto updateProduct(@PathVariable(name = "id") Long productId, @RequestBody ProductDto updatedProductDto) {
-        System.out.println("Update " + productId + " product");
+        System.out.println(YELLOW + "Update " + productId + " product" + RESET);
         return productServiceJpa.updateProduct(productId, updatedProductDto);
     }
 
@@ -68,14 +71,14 @@ public class ProductController {
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PatchMapping("/{id}")
     public ProductDto updatePartProduct(@PathVariable(name = "id") Long productId, @RequestBody ProductDto updatedProductDto) {
-        System.out.println("Update " + productId + " product partially");
+        System.out.println(YELLOW + "Update " + productId + " product partially" + RESET);
         return productServiceJpa.updatePartProduct(productId, updatedProductDto);
     }
 
     //удаление
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable(name = "id") Long productId) {
-        System.out.println("Delete " + productId + " product");
+        System.out.println(YELLOW + "Delete " + productId + " product" + RESET);
         productServiceJpa.deleteProductById(productId);
     }
 

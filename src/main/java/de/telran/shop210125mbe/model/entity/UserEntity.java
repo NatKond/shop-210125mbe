@@ -1,5 +1,6 @@
 package de.telran.shop210125mbe.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import de.telran.shop210125mbe.pojo.Role;
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,6 +43,6 @@ public class UserEntity {
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, optional = false)
     private CartEntity cart;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     private Set<FavoriteEntity> favorites = new HashSet<>();
 }

@@ -1,5 +1,6 @@
 package de.telran.shop210125mbe.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,8 +11,8 @@ import java.util.Set;
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString
 @EqualsAndHashCode
+@ToString
 @Builder
 @Entity
 @Table(name = "Cart")

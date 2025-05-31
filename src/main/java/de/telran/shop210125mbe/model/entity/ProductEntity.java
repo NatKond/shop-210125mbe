@@ -1,5 +1,6 @@
 package de.telran.shop210125mbe.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -47,11 +48,11 @@ public class ProductEntity {
     @Column(name = "UpdatedAt")
     private Timestamp updatedAt;
 
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne //(cascade = {CascadeType.ALL})
     @JoinColumn(name = "CategoryID") // имя колонки для связи с CategoriesEntity
     private CategoryEntity category;
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product")//, fetch = FetchType.LAZY)
     private Set<CartItemEntity> cartItems = new HashSet<>();
 
     @OneToMany(mappedBy = "product")

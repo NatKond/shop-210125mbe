@@ -1,24 +1,35 @@
 package de.telran.shop210125mbe.service.userService;
 
+import de.telran.shop210125mbe.model.dto.CartDto;
+import de.telran.shop210125mbe.model.dto.FavoriteDto;
 import de.telran.shop210125mbe.model.dto.UserDto;
 import de.telran.shop210125mbe.model.dto.UserLimitedDto;
+import de.telran.shop210125mbe.model.entity.CartEntity;
+import de.telran.shop210125mbe.model.entity.FavoriteEntity;
 import de.telran.shop210125mbe.model.entity.UserEntity;
 import de.telran.shop210125mbe.pojo.Role;
 import de.telran.shop210125mbe.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.*;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Set;
 import java.util.stream.Collectors;
+
+import static de.telran.shop210125mbe.textFormatting.RESET;
+import static de.telran.shop210125mbe.textFormatting.YELLOW;
 
 @RequiredArgsConstructor // будет создан конструктор, аргументы которого будут переменные
 @Service
-public class UserServiceJpa{
+public class UserServiceJpa {
 
     // @Autowired
     private final UserRepository userRepository;
+
+    private final ModelMapper modelMapper;
 
 //    @Autowired // DI через конструктор (в SpringBoot 3.0 эту аннотацию выполнять не обязательно)
 //    public UserServiceJpa(UserRepository userRepository) {
@@ -31,7 +42,8 @@ public class UserServiceJpa{
 //    }
 
     @PostConstruct
-    void init(){
+    void init() {
+        System.out.println(YELLOW + "User service JPA initialization" + RESET);
         UserEntity userEntity1 = UserEntity.builder()
                 .name("Alice Johnson")
                 .email("alice.johnson@example.com")
@@ -65,26 +77,57 @@ public class UserServiceJpa{
 
     public List<UserLimitedDto> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(userEntity -> UserLimitedDto.builder()
-                        .userId(userEntity.getUserId())
-                        .name(userEntity.getName())
-                        .email(userEntity.getEmail())
-                        .phoneNumber(userEntity.getPhoneNumber())
-                        .build())
+                .map(userEntity ->
+                                modelMapper.map(userEntity, UserLimitedDto.class)
+//                                UserLimitedDto.builder()
+//                                        .userId(userEntity.getUserId())
+//                                        .name(userEntity.getName())
+//                                        .email(userEntity.getEmail())
+//                                        .phoneNumber(userEntity.getPhoneNumber())
+//                                        .build()
+                )
                 .collect(Collectors.toList());
     }
 
     public UserDto getUserById(Long id) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User with id = " + id + " is not found."));
 
-        return UserDto.builder()
-                .userId(userEntity.getUserId())
-                .name(userEntity.getName())
-                .email(userEntity.getEmail())
-                .phoneNumber(userEntity.getPhoneNumber())
-                .passwordHash("*********")
-                .role(userEntity.getRole().name())
-                .build();
+        modelMapper.typeMap(UserEntity.class, UserDto.class)
+                .addMappings(mapper -> {
+                            mapper.skip(UserDto::setPasswordHash);
+                            //mapper.skip((userDto, userEntityNew) -> userDto.setPasswordHash(((UserEntity)userEntityNew).getPasswordHash()));
+                            mapper.skip(UserDto::setEmail);
+                            // mapper.skip(UserDto::setFavorites);
+                        }
+                        //.addMappings(mapper -> mapper.skip(UserDto::setFavorites)
+                        //(userDto, userEntityNew) -> userDto.setPasswordHash(((UserEntity)userEntityNew).getPasswordHash()))
+                );
+
+        UserDto userDto = modelMapper.map(userEntity, UserDto.class);
+        userDto.setPasswordHash("*".repeat(10)); //изменить уже созданный объект
+
+//        if (userEntity.getCart()!= null){
+//            userDto.setCart(modelMapper.map(userEntity.getCart(),CartDto.class));
+//        }
+
+//        if (userEntity.getFavorites() != null && !userEntity.getFavorites().isEmpty()) {
+//            Set<FavoriteDto> favoriteDtoSet = userEntity.getFavorites()
+//                    .stream()
+//                    .map(favoriteEntity -> modelMapper.map(favoriteEntity, FavoriteDto.class))
+//                    .peek(System.out::println)
+//                    .collect(Collectors.toSet());
+//            // userDto.setFavorites(favoriteDtoSet);
+//        }
+
+        return userDto;
+//        return UserDto.builder()
+//                .userId(userEntity.getUserId())
+//                .name(userEntity.getName())
+//                .email(userEntity.getEmail())
+//                .phoneNumber(userEntity.getPhoneNumber())
+//                .passwordHash("*********")
+//                .role(userEntity.getRole().name())
+//                .build();
     }
 
     public UserDto getByEmail(String valueEmail) {
@@ -126,7 +169,7 @@ public class UserServiceJpa{
     }
 
     public UserDto createUser(UserDto newUserDto) {
-        if (newUserDto.getUserId() != null){
+        if (newUserDto.getUserId() != null) {
             throw new IllegalArgumentException("UserID should not be defined.");
         }
 
@@ -144,7 +187,7 @@ public class UserServiceJpa{
     }
 
     public UserDto updateUser(Long id, UserDto updatedUserDto) {
-        if (updatedUserDto.getUserId() != null){
+        if (updatedUserDto.getUserId() != null) {
             throw new IllegalArgumentException("UserID should not be defined.");
         }
         UserEntity userEntity = userRepository.findById(id).orElse(new UserEntity());
@@ -185,8 +228,8 @@ public class UserServiceJpa{
     }
 
     public UserLimitedDto updatePhoneNumber(Long id, String phoneNumber) {
-        if (userRepository.setPhoneNumber(id, phoneNumber) < 0){
-         throw new NoSuchElementException("User with id = " + id + " is not found.");
+        if (userRepository.setPhoneNumber(id, phoneNumber) < 0) {
+            throw new NoSuchElementException("User with id = " + id + " is not found.");
         }
         UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User with id = " + id + " is not found."));
         return UserLimitedDto.builder()

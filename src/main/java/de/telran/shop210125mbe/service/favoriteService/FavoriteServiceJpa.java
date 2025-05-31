@@ -1,34 +1,91 @@
 package de.telran.shop210125mbe.service.favoriteService;
 
+import de.telran.shop210125mbe.model.dto.FavoriteDto;
+import de.telran.shop210125mbe.model.entity.FavoriteEntity;
 import de.telran.shop210125mbe.pojo.Favorite;
+import de.telran.shop210125mbe.pojo.Product;
 import de.telran.shop210125mbe.repository.FavoriteRepository;
+import de.telran.shop210125mbe.repository.ProductRepository;
+import de.telran.shop210125mbe.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+
+import static de.telran.shop210125mbe.textFormatting.RESET;
+import static de.telran.shop210125mbe.textFormatting.YELLOW;
+
 @Service
+@DependsOn({"userServiceJpa", "productServiceJpa"})
 @RequiredArgsConstructor
 public class FavoriteServiceJpa {
 
     private final FavoriteRepository favoriteRepository;
 
-    public List<Favorite> getAllFavorites() {
-        return List.of();
+    private final UserRepository userRepository;
+
+    private final ProductRepository productRepository;
+
+    private final ModelMapper modelMapper;
+
+    @PostConstruct
+    void init() {
+        System.out.println(YELLOW + "Favorite service JPA initialization" + RESET);
+        FavoriteEntity favorite1 = FavoriteEntity.builder()
+                .user(userRepository.findById(1L).orElse(null))
+                .product(productRepository.findById(2L).orElse(null))
+                .build();
+        FavoriteEntity favorite2 = FavoriteEntity.builder()
+                .user(userRepository.findById(1L).orElse(null))
+                .product(productRepository.findById(1L).orElse(null))
+                .build();
+        FavoriteEntity favorite3 = FavoriteEntity.builder()
+                .user(userRepository.findById(2L).orElse(null))
+                .product(productRepository.findById(3L).orElse(null))
+                .build();
+        FavoriteEntity favorite4 = FavoriteEntity.builder()
+                .user(userRepository.findById(3L).orElse(null))
+                .product(productRepository.findById(4L).orElse(null))
+                .build();
+        FavoriteEntity favorite5 = FavoriteEntity.builder()
+                .user(userRepository.findById(4L).orElse(null))
+                .product(productRepository.findById(1L).orElse(null))
+                .build();
+        FavoriteEntity favorite6 = FavoriteEntity.builder()
+                .user(userRepository.findById(4L).orElse(null))
+                .product(productRepository.findById(2L).orElse(null))
+                .build();
+        favoriteRepository.save(favorite1);
+        favoriteRepository.save(favorite2);
+        favoriteRepository.save(favorite3);
+        favoriteRepository.save(favorite4);
+        favoriteRepository.save(favorite5);
+        favoriteRepository.save(favorite6);
     }
 
-    public Favorite getFavoriteById(Long id) {
+    public List<FavoriteDto> getAllFavorites() {
+        return favoriteRepository.findAll().stream()
+                .map(favoriteEntity -> modelMapper.map(favoriteEntity, FavoriteDto.class))
+                .collect(Collectors.toList());
+    }
+
+    public FavoriteDto getFavoriteById(Long id) {
         return null;
     }
 
-    public Favorite createFavorite(Favorite newFavorite) {
+    public FavoriteDto createFavorite(FavoriteDto newFavorite) {
         return null;
     }
 
-    public Favorite updateFavorite(Long id, Favorite updatedFavorite) {
+    public FavoriteDto updateFavorite(Long id, FavoriteDto updatedFavorite) {
         return null;
     }
 
-    public Favorite updatePartFavorite(Long id, Favorite updatedFavorite) {
+    public FavoriteDto updatePartFavorite(Long id, FavoriteDto updatedFavorite) {
         return null;
     }
 

@@ -31,12 +31,12 @@ public class Product {
 
     @PostConstruct
     void init(){
-        System.out.println("\u001B[33m + Выполняем какие-то действия после создания объекта, перед его использованием " + this + "\u001B[0m");
+        System.out.println("+ Выполняем какие-то действия после создания объекта, перед его использованием " + this);
     }
 
     @PreDestroy
     void destroy(){
-        System.out.println("\u001B[33m - Выполняем какие-то действия перед уничтожением объекта " + this + "\u001B[0m");
+        System.out.println("- Выполняем какие-то действия перед уничтожением объекта " + this);
     }
 
     public Product() {

@@ -1,25 +1,27 @@
 package de.telran.shop210125mbe.service.productService;
 
 import de.telran.shop210125mbe.model.dto.ProductDto;
+import de.telran.shop210125mbe.model.entity.CategoryEntity;
 import de.telran.shop210125mbe.model.entity.ProductEntity;
 import de.telran.shop210125mbe.repository.CategoryRepository;
 import de.telran.shop210125mbe.repository.ProductRepository;
 import de.telran.shop210125mbe.service.categoryService.CategoryServiceJpa;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static de.telran.shop210125mbe.textFormatting.RESET;
+import static de.telran.shop210125mbe.textFormatting.YELLOW;
+
 @RequiredArgsConstructor
 @Service
-public class ProductServiceJpa{
+@DependsOn({"categoryServiceJpa"})
+public class ProductServiceJpa {
 
     // @Autowired
     private final ProductRepository productRepository;
@@ -27,10 +29,12 @@ public class ProductServiceJpa{
     private final CategoryRepository categoryRepository;
     // private final CategoryServiceJpa categoryServiceJpa;
 
-    // @PostConstruct
-    @EventListener(ApplicationReadyEvent.class)
-    @Transactional
-    void init(){
+    @PostConstruct
+        //@EventListener(ApplicationReadyEvent.class)
+        // @Transactional
+    void init() {
+        System.out.println(YELLOW + "Product service JPA initialization" + RESET);
+        // CategoryEntity categoryEntity = categoryRepository.findById(1L).orElse(null);
         // заполним таблицу Product тестовыми данными
         ProductEntity product1 = ProductEntity.builder()
                 .name("Garden Trowel")
@@ -40,11 +44,12 @@ public class ProductServiceJpa{
                 .imageUrl("https://example.com/images/garden_trowel.jpg")
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .updatedAt(new Timestamp(System.currentTimeMillis()))
-                .category(categoryRepository.findById(1L).orElse(null))
+                .category(categoryRepository.getReferenceById(1L))
+                // .category(categoryRepository.findById(1L).orElse(null))
                 .build();
         // product1.setProductId(...); // это поле должно быть сгенерировано бд
         //ProductEntity productNew1 =
-                productRepository.save(product1); // сохраняем в базу данных
+        productRepository.save(product1); // сохраняем в базу данных
 //        System.out.println("productNew1 = " + productNew1);
 
         product1.setPrice(29.99);
@@ -60,7 +65,8 @@ public class ProductServiceJpa{
                 .imageUrl("https://example.com/images/pruning_shears.jpg")
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .updatedAt(new Timestamp(System.currentTimeMillis()))
-                .category(categoryRepository.findById(1L).orElse(null))
+                .category(categoryRepository.getReferenceById(1L))
+                //.category(categoryRepository.findById(1L).orElse(null))
                 .build();
         productRepository.save(product2);
 
@@ -71,7 +77,8 @@ public class ProductServiceJpa{
                 .imageUrl("https://example.com/images/lawn_mower.jpg")
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .updatedAt(new Timestamp(System.currentTimeMillis()))
-                .category(categoryRepository.findById(2L).orElse(null))
+                .category(categoryRepository.getReferenceById(2L))
+                //.category(categoryRepository.findById(2L).orElse(null))
                 .build();
         productRepository.save(product3);
 
@@ -83,7 +90,8 @@ public class ProductServiceJpa{
                 .imageUrl("https://example.com/images/lawn_mower.jpg")
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .updatedAt(new Timestamp(System.currentTimeMillis()))
-                .category(categoryRepository.findById(3L).orElse(null))
+                .category(categoryRepository.getReferenceById(3L))
+                //.category(categoryRepository.findById(3L).orElse(null))
                 .build();
         productRepository.save(product4);
     }
@@ -104,7 +112,7 @@ public class ProductServiceJpa{
             );
             result.add(productDto);
         }
-        return result ;
+        return result;
     }
 
     public ProductDto getProductById(Long id) {
@@ -123,7 +131,7 @@ public class ProductServiceJpa{
     }
 
 
-    public ProductDto getProductByName(String name){
+    public ProductDto getProductByName(String name) {
         ProductEntity productEntity = productRepository.findByName(name).orElseThrow(() -> new NoSuchElementException("Product with name = " + name + " is not found."));
         return ProductDto.builder()
                 .productId(productEntity.getProductId())
@@ -138,7 +146,7 @@ public class ProductServiceJpa{
                 .build();
     }
 
-    public List<ProductDto> getProductsWithDiscountPrice(){
+    public List<ProductDto> getProductsWithDiscountPrice() {
         List<ProductEntity> productEntities = productRepository.findAllWithDiscountPrice();
         List<ProductDto> result = new ArrayList<>();
         for (ProductEntity productEntity : productEntities) {
@@ -154,7 +162,7 @@ public class ProductServiceJpa{
             );
             result.add(productDto);
         }
-        return result ;
+        return result;
     }
 
     public ProductDto insertProduct(ProductDto newProductDto) {

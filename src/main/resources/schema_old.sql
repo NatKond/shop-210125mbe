@@ -52,3 +52,10 @@ CREATE TABLE Orders
     UpdatedAt datetime NULL
 );
 
+CREATE TABLE Favorites
+(
+    FavoriteID INT PRIMARY KEY,
+    UserID INT NOT NULL,
+    ProductID INT NOT NULL
+)
+

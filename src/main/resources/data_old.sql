@@ -35,3 +35,12 @@ INSERT INTO Orders (OrderId, CreatedAt, DeliveryAddress, ContactPhone, DeliveryM
 (3, '2025-05-13 14:45:00', '789 Pine Rd, Lakeview', '+1122334455', 'Standard Shipping', 'SHIPPED', '2025-05-14 08:00:00'),
 (4, '2025-05-12 08:00:00', '321 Birch Ln, Brookfield', '+1222333444', 'Courier', 'DELIVERED', '2025-05-15 16:30:00'),
 (5, '2025-05-11 11:20:00', '654 Cedar St, Maplewood', '+1555666777', 'Standard Shipping', 'CANCELED', '2025-05-11 12:00:00');
+
+INSERT INTO Favorites (FavoriteID, UserID, ProductID)
+VALUES
+    (1, 1, 2),
+    (2, 1, 1),
+    (3, 2, 3),
+    (4, 3, 4),
+    (5, 4, 1),
+    (5, 4, 2);

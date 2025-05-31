@@ -10,9 +10,11 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static de.telran.shop210125mbe.textFormatting.RESET;
+import static de.telran.shop210125mbe.textFormatting.YELLOW;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +26,7 @@ public class CategoryServiceJpa {
     // @EventListener(ApplicationReadyEvent.class)
     // @Transactional
     void init() {
+        System.out.println(YELLOW + "Category service JPA initialization" + RESET);
         // создадим категории
         CategoryEntity category1 = CategoryEntity.builder()
                 .name("Garden Tools")

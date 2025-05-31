@@ -1,5 +1,9 @@
 package de.telran.shop210125mbe.model.dto;
+import de.telran.shop210125mbe.model.entity.CartEntity;
+import de.telran.shop210125mbe.model.entity.FavoriteEntity;
 import lombok.*;
+
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,5 +25,11 @@ public class UserDto {
     private String passwordHash;
 
     private String role;
+
+    //private Long cardId;
+
+    private CartDto cart;
+
+    private Set<FavoriteDto> favorites;
 
 }

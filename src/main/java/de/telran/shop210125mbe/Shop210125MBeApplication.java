@@ -16,13 +16,13 @@ public class Shop210125MBeApplication {
         Product product = (Product) applicationContext.getBean(Product.class);
         product.setProductId(1L);
         product.setName("Carrot");
-        System.out.println(product);
+        //System.out.println(product);
 
         // поиск по имени bean
         Product productName = (Product) applicationContext.getBean("product");
         productName.setProductId(2L);
         product.setName("Broccoli");
-        System.out.println(productName);
+        //System.out.println(productName);
     }
 
 }
