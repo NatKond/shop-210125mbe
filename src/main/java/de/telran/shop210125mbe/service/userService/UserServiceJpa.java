@@ -1,11 +1,8 @@
 package de.telran.shop210125mbe.service.userService;
 
-import de.telran.shop210125mbe.model.dto.CartDto;
-import de.telran.shop210125mbe.model.dto.FavoriteDto;
+import de.telran.shop210125mbe.mapper.Mappers;
 import de.telran.shop210125mbe.model.dto.UserDto;
 import de.telran.shop210125mbe.model.dto.UserLimitedDto;
-import de.telran.shop210125mbe.model.entity.CartEntity;
-import de.telran.shop210125mbe.model.entity.FavoriteEntity;
 import de.telran.shop210125mbe.model.entity.UserEntity;
 import de.telran.shop210125mbe.pojo.Role;
 import de.telran.shop210125mbe.repository.UserRepository;
@@ -16,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 import static de.telran.shop210125mbe.textFormatting.RESET;
@@ -30,6 +26,8 @@ public class UserServiceJpa {
     private final UserRepository userRepository;
 
     private final ModelMapper modelMapper;
+
+    private final Mappers mappers;
 
 //    @Autowired // DI через конструктор (в SpringBoot 3.0 эту аннотацию выполнять не обязательно)
 //    public UserServiceJpa(UserRepository userRepository) {
@@ -92,34 +90,7 @@ public class UserServiceJpa {
     public UserDto getUserById(Long id) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(() -> new NoSuchElementException("User with id = " + id + " is not found."));
 
-        modelMapper.typeMap(UserEntity.class, UserDto.class)
-                .addMappings(mapper -> {
-                            mapper.skip(UserDto::setPasswordHash);
-                            //mapper.skip((userDto, userEntityNew) -> userDto.setPasswordHash(((UserEntity)userEntityNew).getPasswordHash()));
-                            mapper.skip(UserDto::setEmail);
-                            // mapper.skip(UserDto::setFavorites);
-                        }
-                        //.addMappings(mapper -> mapper.skip(UserDto::setFavorites)
-                        //(userDto, userEntityNew) -> userDto.setPasswordHash(((UserEntity)userEntityNew).getPasswordHash()))
-                );
-
-        UserDto userDto = modelMapper.map(userEntity, UserDto.class);
-        userDto.setPasswordHash("*".repeat(10)); //изменить уже созданный объект
-
-//        if (userEntity.getCart()!= null){
-//            userDto.setCart(modelMapper.map(userEntity.getCart(),CartDto.class));
-//        }
-
-//        if (userEntity.getFavorites() != null && !userEntity.getFavorites().isEmpty()) {
-//            Set<FavoriteDto> favoriteDtoSet = userEntity.getFavorites()
-//                    .stream()
-//                    .map(favoriteEntity -> modelMapper.map(favoriteEntity, FavoriteDto.class))
-//                    .peek(System.out::println)
-//                    .collect(Collectors.toSet());
-//            // userDto.setFavorites(favoriteDtoSet);
-//        }
-
-        return userDto;
+        return mappers.convertToUserDto(userEntity);
 //        return UserDto.builder()
 //                .userId(userEntity.getUserId())
 //                .name(userEntity.getName())
@@ -135,14 +106,15 @@ public class UserServiceJpa {
         UserEntity returnUserEntity = userRepository.findByEmailNativeQuery(valueEmail).orElseThrow(() -> new NoSuchElementException("User with email = " + valueEmail + " is not found."));
 
         //Трансформируем в Dto
-        UserDto returnUserDto = UserDto.builder()
-                .userId(returnUserEntity.getUserId())
-                .email(returnUserEntity.getEmail())
-                .name(returnUserEntity.getName())
-                .role(returnUserEntity.getRole().toString())
-                .phoneNumber(returnUserEntity.getPhoneNumber())
-                .passwordHash("******")
-                .build();
+        UserDto returnUserDto = mappers.convertToUserDto(returnUserEntity);
+//                UserDto.builder()
+//                        .userId(returnUserEntity.getUserId())
+//                        .email(returnUserEntity.getEmail())
+//                        .name(returnUserEntity.getName())
+//                        .role(returnUserEntity.getRole().toString())
+//                        .phoneNumber(returnUserEntity.getPhoneNumber())
+//                        .passwordHash("******")
+//                        .build();
 
         return returnUserDto;
     }
@@ -154,15 +126,15 @@ public class UserServiceJpa {
         //Трансформируем в List Dto
         List<UserDto> returnUsersDto =
                 returnUsersEntity.stream()
-                        .map(userEntity ->
-                                UserDto.builder()
-                                        .userId(userEntity.getUserId())
-                                        .email(userEntity.getEmail())
-                                        .name(userEntity.getName())
-                                        .role(userEntity.getRole().toString())
-                                        .phoneNumber(userEntity.getPhoneNumber())
-                                        .passwordHash("******")
-                                        .build())
+                        .map(mappers::convertToUserDto)
+//                                UserDto.builder()
+//                                        .userId(userEntity.getUserId())
+//                                        .email(userEntity.getEmail())
+//                                        .name(userEntity.getName())
+//                                        .role(userEntity.getRole().toString())
+//                                        .phoneNumber(userEntity.getPhoneNumber())
+//                                        .passwordHash("******")
+//                                        .build())
                         .collect(Collectors.toList());
 
         return returnUsersDto;
@@ -173,31 +145,52 @@ public class UserServiceJpa {
             throw new IllegalArgumentException("UserID should not be defined.");
         }
 
-        UserEntity userEntity = UserEntity.builder()
-                .name(newUserDto.getName())
-                .email(newUserDto.getEmail())
-                .phoneNumber(newUserDto.getPhoneNumber())
-                .passwordHash(newUserDto.getPasswordHash())
-                .role(Role.valueOf(newUserDto.getRole()))
-                .build();
+//        UserEntity userEntity = UserEntity.builder()
+//                .name(newUserDto.getName())
+//                .email(newUserDto.getEmail())
+//                .phoneNumber(newUserDto.getPhoneNumber())
+//                .passwordHash(newUserDto.getPasswordHash())
+//                .role(Role.valueOf(newUserDto.getRole()))
+//                .build();
 
-        userEntity = userRepository.save(userEntity);
-
+        UserEntity userEntity = userRepository.save(mappers.convertToUserEntity(newUserDto));
         return getUserById(userEntity.getUserId());
     }
 
     public UserDto updateUser(Long id, UserDto updatedUserDto) {
-        if (updatedUserDto.getUserId() != null) {
-            throw new IllegalArgumentException("UserID should not be defined.");
+        if (updatedUserDto.getUserId() == null) {
+            throw new IllegalArgumentException("UserID should be defined.");
         }
-        UserEntity userEntity = userRepository.findById(id).orElse(new UserEntity());
-        userEntity.setName(updatedUserDto.getName());
-        userEntity.setEmail(updatedUserDto.getEmail());
-        userEntity.setPhoneNumber(updatedUserDto.getPhoneNumber());
-        userEntity.setPasswordHash(updatedUserDto.getPasswordHash());
-        userEntity.setRole(Role.valueOf(updatedUserDto.getRole()));
-        userRepository.save(userEntity);
-        return getUserById(id);
+        UserEntity updatedUserEntity = mappers.convertToUserEntity(updatedUserDto);
+//        try {
+//            // Если объект есть в базе данных, мы его обновляем, если нет, то выбрасывается исключение
+//            updatedUserEntity = userRepository.save(updatedUserEntity);
+//            return mappers.convertToUserDto(updatedUserEntity);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            // Если выбросилось исключение, то мы создаем новый объект
+//            updatedUserDto.setUserId(null);
+//            return createUser(updatedUserDto);
+//        }
+
+
+        if (userRepository.findById(updatedUserDto.getUserId()).isPresent()) {
+            // Если объект есть в базе данных, мы его обновляем
+            UserEntity returnedUserEntity = userRepository.save(updatedUserEntity);
+            return mappers.convertToUserDto(returnedUserEntity);
+        } else {
+            // Если объекта нет в базе данных, то нужно создать новый
+            updatedUserDto.setUserId(null);
+            return createUser(updatedUserDto);
+        }
+
+//        userEntity.setName(updatedUserDto.getName());
+//        userEntity.setEmail(updatedUserDto.getEmail());
+//        userEntity.setPhoneNumber(updatedUserDto.getPhoneNumber());
+//        userEntity.setPasswordHash(updatedUserDto.getPasswordHash());
+//        userEntity.setRole(Role.valueOf(updatedUserDto.getRole()));
+//        userRepository.save(userEntity);
+//        return getUserById(id);
     }
 
     public UserDto updatePartUser(Long id, UserDto updatedUserDto) {

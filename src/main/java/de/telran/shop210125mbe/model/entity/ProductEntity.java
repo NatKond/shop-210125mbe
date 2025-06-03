@@ -48,7 +48,7 @@ public class ProductEntity {
     @Column(name = "UpdatedAt")
     private Timestamp updatedAt;
 
-    @ManyToOne //(cascade = {CascadeType.ALL})
+    @ManyToOne
     @JoinColumn(name = "CategoryID") // имя колонки для связи с CategoriesEntity
     private CategoryEntity category;
 

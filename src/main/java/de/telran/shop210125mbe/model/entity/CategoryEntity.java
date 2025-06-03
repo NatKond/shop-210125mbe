@@ -17,15 +17,15 @@ import java.util.Set;
 @Table(name = "Categories")
 public class CategoryEntity {
 
-        @Id
-        @Column(name = "CategoryID")
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long categoryId;
+    @Id
+    @Column(name = "CategoryID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long categoryId;
 
-        @Column(name = "Name")
-        private String name;
+    @Column(name = "Name")
+    private String name;
 
-        @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-        // @OneToMany(mappedBy = "category")
-        private Set<ProductEntity> products = new HashSet<>();
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    // @OneToMany(mappedBy = "category")
+    private Set<ProductEntity> products = new HashSet<>();
 }

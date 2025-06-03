@@ -19,22 +19,45 @@ public class Mappers {
     private final ModelMapper modelMapper;
 
     public UserDto convertToUserDto(UserEntity usersEntity) {
-        if(usersEntity==null) return new UserDto();
-//        modelMapper.typeMap(UsersEntity.class, UserDto.class)
-//                .addMappings(mapper -> mapper.skip(UserDto::setEmail)); // исключаем этот метод из работы
+        if (usersEntity == null) return new UserDto();
+        modelMapper.typeMap(UserEntity.class, UserDto.class)
+                .addMappings(mapper -> {
+                            mapper.skip(UserDto::setPasswordHash);
+                            //mapper.skip((userDto, userEntityNew) -> userDto.setPasswordHash(((UserEntity)userEntityNew).getPasswordHash()));
+                            mapper.skip(UserDto::setPhoneNumber);
+                            mapper.skip(UserDto::setEmail);
+                            // mapper.skip(UserDto::setFavorites);
+                        }
+                        //.addMappings(mapper -> mapper.skip(UserDto::setFavorites)
+                        //(userDto, userEntityNew) -> userDto.setPasswordHash(((UserEntity)userEntityNew).getPasswordHash()))
+                );
         UserDto userDto = modelMapper.map(usersEntity, UserDto.class); //автомат
-        if (userDto.getPasswordHash()!=null)
-            userDto.setPasswordHash("***"); // замещаем данных
+        userDto.setPasswordHash("*".repeat(10)); //изменить уже созданный объект
+
+        // преобразовываем вручную
+//        if (userEntity.getFavorites() != null && !userEntity.getFavorites().isEmpty()) {
+//            Set<FavoriteDto> favoriteDtoSet = userEntity.getFavorites()
+//                    .stream()
+//                    .map(favoriteEntity -> modelMapper.map(favoriteEntity, FavoriteDto.class))
+//                    .peek(System.out::println)
+//                    .collect(Collectors.toSet());
+//            userDto.setFavorites(favoriteDtoSet);
+//        }
+
 
         // преобразовываем
-        if (usersEntity.getFavorites()!=null) {
-            Set<FavoriteDto> favoritesDtoSet = MapperUtil.convertSet(usersEntity.getFavorites(), this::convertToFavoriteDto);
-            userDto.setFavorites(favoritesDtoSet);
-        }
-
-        CartDto cartDto = convertToCartDto(usersEntity.getCart()); // второй связанный объект
-        userDto.setCart(cartDto);
+//        if (usersEntity.getFavorites() != null) {
+//            Set<FavoriteDto> favoritesDtoSet = MapperUtil.convertSet(usersEntity.getFavorites(), this::convertToFavoriteDto);
+//            userDto.setFavorites(favoritesDtoSet);
+//        }
+//
+//        CartDto cartDto = convertToCartDto(usersEntity.getCart()); // второй связанный объект
+//        userDto.setCart(cartDto);
         return userDto;
+    }
+
+    public UserEntity convertToUserEntity(UserDto userDto){
+        return modelMapper.map(userDto,UserEntity.class);
     }
 
     public FavoriteDto convertToFavoriteDto(FavoriteEntity favoriteEntity) {
@@ -45,7 +68,7 @@ public class Mappers {
 
     public CartDto convertToCartDto(CartEntity cartEntity) {
         CartDto cartDto = null;
-        if(cartEntity!=null)
+        if (cartEntity != null)
             cartDto = modelMapper.map(cartEntity, CartDto.class); //автомат
         return cartDto;
     }

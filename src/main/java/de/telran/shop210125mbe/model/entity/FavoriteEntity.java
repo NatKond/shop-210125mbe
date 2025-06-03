@@ -1,6 +1,5 @@
 package de.telran.shop210125mbe.model.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -8,8 +7,8 @@ import lombok.*;
 @NoArgsConstructor
 @Setter
 @Getter
-//@EqualsAndHashCode
-//@ToString
+@EqualsAndHashCode (exclude = {"user", "product"})
+@ToString (exclude = {"user", "product"})
 @Builder
 @Entity
 @Table(name = "Favorites")
@@ -20,10 +19,14 @@ public class FavoriteEntity {
     @GeneratedValue(strategy =  GenerationType.IDENTITY)
     private Long favoriteId;
 
+//    @EqualsAndHashCode.Exclude
+//    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "UserID")
     private UserEntity user;
 
+//    @EqualsAndHashCode.Exclude
+//    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "ProductID")
     private ProductEntity product;

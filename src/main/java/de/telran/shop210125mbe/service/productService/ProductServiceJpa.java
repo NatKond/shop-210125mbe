@@ -30,7 +30,7 @@ public class ProductServiceJpa {
     // private final CategoryServiceJpa categoryServiceJpa;
 
     @PostConstruct
-        //@EventListener(ApplicationReadyEvent.class)
+        // @EventListener(ApplicationReadyEvent.class)
         // @Transactional
     void init() {
         System.out.println(YELLOW + "Product service JPA initialization" + RESET);
@@ -44,8 +44,8 @@ public class ProductServiceJpa {
                 .imageUrl("https://example.com/images/garden_trowel.jpg")
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .updatedAt(new Timestamp(System.currentTimeMillis()))
-                .category(categoryRepository.getReferenceById(1L))
-                // .category(categoryRepository.findById(1L).orElse(null))
+                //.category(categoryRepository.getReferenceById(1L))
+                .category(categoryRepository.findById(1L).orElse(null))
                 .build();
         // product1.setProductId(...); // это поле должно быть сгенерировано бд
         //ProductEntity productNew1 =
@@ -65,8 +65,8 @@ public class ProductServiceJpa {
                 .imageUrl("https://example.com/images/pruning_shears.jpg")
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .updatedAt(new Timestamp(System.currentTimeMillis()))
-                .category(categoryRepository.getReferenceById(1L))
-                //.category(categoryRepository.findById(1L).orElse(null))
+                //.category(categoryRepository.getReferenceById(1L))
+                .category(categoryRepository.findById(1L).orElse(null))
                 .build();
         productRepository.save(product2);
 
@@ -77,8 +77,8 @@ public class ProductServiceJpa {
                 .imageUrl("https://example.com/images/lawn_mower.jpg")
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .updatedAt(new Timestamp(System.currentTimeMillis()))
-                .category(categoryRepository.getReferenceById(2L))
-                //.category(categoryRepository.findById(2L).orElse(null))
+                //.category(categoryRepository.getReferenceById(2L))
+                .category(categoryRepository.findById(2L).orElse(null))
                 .build();
         productRepository.save(product3);
 
@@ -90,8 +90,8 @@ public class ProductServiceJpa {
                 .imageUrl("https://example.com/images/lawn_mower.jpg")
                 .createdAt(new Timestamp(System.currentTimeMillis()))
                 .updatedAt(new Timestamp(System.currentTimeMillis()))
-                .category(categoryRepository.getReferenceById(3L))
-                //.category(categoryRepository.findById(3L).orElse(null))
+                //.category(categoryRepository.getReferenceById(3L))
+                .category(categoryRepository.findById(3L).orElse(null))
                 .build();
         productRepository.save(product4);
     }
