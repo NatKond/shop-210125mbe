@@ -66,7 +66,8 @@ public class CartController {
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCart(@PathVariable Long id) {
         System.out.println(YELLOW + "Delete cart" + id + RESET);
-        return (cartServiceJpa.deleteCartById(id)) ? ResponseEntity.ok().body("Cart with id = " + id + " is deleted.") :
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart with id = " + id + " is not found.");
+//        return (cartServiceJpa.deleteCartById(id)) ? ResponseEntity.ok().body("Cart with id = " + id + " is deleted.") :
+//                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cart with id = " + id + " is not found.");
+        return ResponseEntity.ok().body("Cart with id = " + id + " is deleted.");
     }
 }

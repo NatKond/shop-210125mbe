@@ -7,11 +7,11 @@ import lombok.*;
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString
-@EqualsAndHashCode
+@ToString(exclude = "cart")
+@EqualsAndHashCode(exclude = "cart")
 @Builder
 @Entity
-@Table(name = "Cart")
+@Table(name = "CartItems")
 public class CartItemEntity {
 
     @Id

@@ -1,5 +1,6 @@
 package de.telran.shop210125mbe.service.favoriteService;
 
+import de.telran.shop210125mbe.mapper.Mappers;
 import de.telran.shop210125mbe.model.dto.FavoriteDto;
 import de.telran.shop210125mbe.model.entity.FavoriteEntity;
 import de.telran.shop210125mbe.pojo.Favorite;
@@ -30,7 +31,7 @@ public class FavoriteServiceJpa {
 
     private final ProductRepository productRepository;
 
-    private final ModelMapper modelMapper;
+    private final Mappers mappers;
 
     @PostConstruct
     void init() {
@@ -39,37 +40,42 @@ public class FavoriteServiceJpa {
                 .user(userRepository.findById(1L).orElse(null))
                 .product(productRepository.findById(2L).orElse(null))
                 .build();
+        favoriteRepository.save(favorite1);
+
         FavoriteEntity favorite2 = FavoriteEntity.builder()
                 .user(userRepository.findById(1L).orElse(null))
                 .product(productRepository.findById(1L).orElse(null))
                 .build();
+        favoriteRepository.save(favorite2);
+
         FavoriteEntity favorite3 = FavoriteEntity.builder()
                 .user(userRepository.findById(2L).orElse(null))
                 .product(productRepository.findById(3L).orElse(null))
                 .build();
+        favoriteRepository.save(favorite3);
+
         FavoriteEntity favorite4 = FavoriteEntity.builder()
                 .user(userRepository.findById(3L).orElse(null))
                 .product(productRepository.findById(4L).orElse(null))
                 .build();
+        favoriteRepository.save(favorite4);
+
         FavoriteEntity favorite5 = FavoriteEntity.builder()
                 .user(userRepository.findById(4L).orElse(null))
                 .product(productRepository.findById(1L).orElse(null))
                 .build();
+        favoriteRepository.save(favorite5);
+
         FavoriteEntity favorite6 = FavoriteEntity.builder()
                 .user(userRepository.findById(4L).orElse(null))
                 .product(productRepository.findById(2L).orElse(null))
                 .build();
-        favoriteRepository.save(favorite1);
-        favoriteRepository.save(favorite2);
-        favoriteRepository.save(favorite3);
-        favoriteRepository.save(favorite4);
-        favoriteRepository.save(favorite5);
         favoriteRepository.save(favorite6);
     }
 
     public List<FavoriteDto> getAllFavorites() {
         return favoriteRepository.findAll().stream()
-                .map(favoriteEntity -> modelMapper.map(favoriteEntity, FavoriteDto.class))
+                .map(mappers::convertToFavoriteDto)
                 .collect(Collectors.toList());
     }
 

@@ -1,5 +1,6 @@
 package de.telran.shop210125mbe.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;
 
 @AllArgsConstructor
@@ -12,9 +13,10 @@ import lombok.*;
 public class FavoriteDto {
     private Long favoriteId;
 
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private Long userId;
 
-    private Long productId;
+    private ProductLimitedDto product;
+    //private Long productId;
 
-    //private ProductDto productDto;
 }

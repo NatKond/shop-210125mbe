@@ -26,7 +26,7 @@ public class UserDto {
 
     private String role;
 
-    //private Long cardId;
+//    private Long cartId;
 
     private CartDto cart;
 

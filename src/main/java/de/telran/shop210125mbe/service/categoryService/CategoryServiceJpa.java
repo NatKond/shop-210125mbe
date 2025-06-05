@@ -1,5 +1,6 @@
 package de.telran.shop210125mbe.service.categoryService;
 
+import de.telran.shop210125mbe.mapper.Mappers;
 import de.telran.shop210125mbe.model.dto.CategoryDto;
 import de.telran.shop210125mbe.model.entity.CategoryEntity;
 import de.telran.shop210125mbe.repository.CategoryRepository;
@@ -22,44 +23,39 @@ public class CategoryServiceJpa {
 
     private final CategoryRepository categoryRepository;
 
+    private final Mappers mappers;
+
     @PostConstruct
-    // @EventListener(ApplicationReadyEvent.class)
-    // @Transactional
+        // @EventListener(ApplicationReadyEvent.class)
+        // @Transactional
     void init() {
         System.out.println(YELLOW + "Category service JPA initialization" + RESET);
         // создадим категории
         CategoryEntity category1 = CategoryEntity.builder()
                 .name("Garden Tools")
                 .build();
+        categoryRepository.save(category1);
 
         CategoryEntity category2 = CategoryEntity.builder()
                 .name("Outdoor Power Equipment")
                 .build();
+        categoryRepository.save(category2);
 
         CategoryEntity category3 = CategoryEntity.builder()
                 .name("Watering Equipment")
                 .build();
-
-        categoryRepository.save(category1);
-        categoryRepository.save(category2);
         categoryRepository.save(category3);
     }
 
     public List<CategoryDto> getAllCategories() {
         return categoryRepository.findAll().stream()
-                .map((categoryEntity) -> CategoryDto.builder()
-                        .categoryId(categoryEntity.getCategoryId())
-                        .name(categoryEntity.getName())
-                        .build())
+                .map(mappers::convertToCategoryDto)
                 .collect(Collectors.toList());
     }
 
     public CategoryDto getCategoryById(Long id) {
         CategoryEntity categoryEntity = categoryRepository.findById(id).orElse(null);
-        return categoryEntity != null ? CategoryDto.builder()
-                .categoryId(categoryEntity.getCategoryId())
-                .name(categoryEntity.getName())
-                .build() : null;
+        return categoryEntity != null ? mappers.convertToCategoryDto(categoryEntity) : null;
     }
 
     public CategoryDto createCategory(CategoryDto newCategoryDto) {
@@ -67,11 +63,11 @@ public class CategoryServiceJpa {
             throw new IllegalArgumentException("CategoryID should not be defined.");
         }
 
-        CategoryEntity categoryEntity = CategoryEntity.builder()
-                .name(newCategoryDto.getName())
-                .build();
-        categoryRepository.save(categoryEntity);
-        return getCategoryById(categoryEntity.getCategoryId());
+//        CategoryEntity categoryEntity = CategoryEntity.builder()
+//                .name(newCategoryDto.getName())
+//                .build();
+        CategoryEntity categoryEntity = categoryRepository.save(mappers.convertToCategoryEntity(newCategoryDto));
+        return mappers.convertToCategoryDto(categoryEntity);
     }
 
     public CategoryDto updateCategory(Long id, CategoryDto updatedCategoryDto) {

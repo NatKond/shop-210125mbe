@@ -9,9 +9,12 @@ import lombok.*;
 @ToString
 @EqualsAndHashCode
 @Builder
-public class CategoryDto {
-
-    private Long categoryId;
+public class ProductLimitedDto {
+    private Long productId;
 
     private String name;
+
+//    private String description;
+//
+//    private Double price;
 }

@@ -26,6 +26,6 @@ public class ProductDto {
 
     private Timestamp updatedAt;
 
-    private Long categoryId;
-
+    private CategoryDto category;
+    // private Long categoryId;
 }

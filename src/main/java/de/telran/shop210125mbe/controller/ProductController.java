@@ -1,7 +1,9 @@
 package de.telran.shop210125mbe.controller;
 
 
+import de.telran.shop210125mbe.model.dto.CategoryDto;
 import de.telran.shop210125mbe.model.dto.ProductDto;
+import de.telran.shop210125mbe.pojo.Category;
 import de.telran.shop210125mbe.pojo.Product;
 import de.telran.shop210125mbe.service.productService.ProductServiceInterface;
 import de.telran.shop210125mbe.service.productService.ProductServiceJpa;
@@ -50,6 +52,19 @@ public class ProductController {
     public List<ProductDto> getProductsWithDiscount() {
         System.out.println(YELLOW + "Get all products with discount" + RESET);
         return productServiceJpa.getProductsWithDiscountPrice();
+    }
+
+
+    @GetMapping("/description") // http://localhost:8080/product/description?description=lawn%20mower&price=100
+    public List<ProductDto> getProductsWithDescriptionContainingAndPriceGreaterThan(@RequestParam String description, @RequestParam Double price) {
+        System.out.println(YELLOW + "Get all products with discount" + RESET);
+        return productServiceJpa.getProductsWithDescriptionContainingAndPriceGreaterThan(description, price);
+    }
+
+    @GetMapping("/category")// http://localhost:8080/product/category?price=0
+    public List<ProductDto> getProductsWithCategoryAndDiscountPriceGreaterThan(@RequestBody CategoryDto categoryDto, @RequestParam Double price) {
+        System.out.println(YELLOW + "Get all products with discount" + RESET);
+        return productServiceJpa.getProductsWithCategoryAndDiscountPriceGreaterThan(categoryDto, price);
     }
 
     @ResponseStatus(HttpStatus.CREATED)

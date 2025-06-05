@@ -1,8 +1,11 @@
 package de.telran.shop210125mbe.service.productService;
 
+import de.telran.shop210125mbe.mapper.Mappers;
+import de.telran.shop210125mbe.model.dto.CategoryDto;
 import de.telran.shop210125mbe.model.dto.ProductDto;
 import de.telran.shop210125mbe.model.entity.CategoryEntity;
 import de.telran.shop210125mbe.model.entity.ProductEntity;
+import de.telran.shop210125mbe.pojo.Category;
 import de.telran.shop210125mbe.repository.CategoryRepository;
 import de.telran.shop210125mbe.repository.ProductRepository;
 import de.telran.shop210125mbe.service.categoryService.CategoryServiceJpa;
@@ -10,10 +13,12 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 import static de.telran.shop210125mbe.textFormatting.RESET;
 import static de.telran.shop210125mbe.textFormatting.YELLOW;
@@ -28,6 +33,8 @@ public class ProductServiceJpa {
     // @Autowired
     private final CategoryRepository categoryRepository;
     // private final CategoryServiceJpa categoryServiceJpa;
+
+    private final Mappers mappers;
 
     @PostConstruct
         // @EventListener(ApplicationReadyEvent.class)
@@ -99,17 +106,9 @@ public class ProductServiceJpa {
     public List<ProductDto> getAllProducts() {
         List<ProductEntity> productEntities = productRepository.findAll();
         List<ProductDto> result = new ArrayList<>();
+
         for (ProductEntity productEntity : productEntities) {
-            ProductDto productDto = new ProductDto(productEntity.getProductId(),
-                    productEntity.getName(),
-                    productEntity.getDescription(),
-                    productEntity.getPrice(),
-                    productEntity.getImageUrl(),
-                    productEntity.getDiscountPrice(),
-                    productEntity.getCreatedAt(),
-                    productEntity.getUpdatedAt(),
-                    productEntity.getCategory().getCategoryId()
-            );
+            ProductDto productDto = mappers.convertToProductDto(productEntity);
             result.add(productDto);
         }
         return result;
@@ -117,87 +116,100 @@ public class ProductServiceJpa {
 
     public ProductDto getProductById(Long id) {
         ProductEntity productEntity = productRepository.findById(id).orElseThrow(() -> new NoSuchElementException("Product with id = " + id + " is not found."));
-        return ProductDto.builder()
-                .productId(productEntity.getProductId())
-                .name(productEntity.getName())
-                .description(productEntity.getDescription())
-                .price(productEntity.getPrice())
-                .imageUrl(productEntity.getImageUrl())
-                .discountPrice(productEntity.getDiscountPrice())
-                .createdAt(productEntity.getCreatedAt())
-                .updatedAt(productEntity.getUpdatedAt())
-                .categoryId(productEntity.getCategory().getCategoryId())
-                .build();
+        return mappers.convertToProductDto(productEntity);
+//                ProductDto.builder()
+//                .productId(productEntity.getProductId())
+//                .name(productEntity.getName())
+//                .description(productEntity.getDescription())
+//                .price(productEntity.getPrice())
+//                .imageUrl(productEntity.getImageUrl())
+//                .discountPrice(productEntity.getDiscountPrice())
+//                .createdAt(productEntity.getCreatedAt())
+//                .updatedAt(productEntity.getUpdatedAt())
+//                .categoryId(productEntity.getCategory().getCategoryId())
+//                .build();
     }
 
 
     public ProductDto getProductByName(String name) {
         ProductEntity productEntity = productRepository.findByName(name).orElseThrow(() -> new NoSuchElementException("Product with name = " + name + " is not found."));
-        return ProductDto.builder()
-                .productId(productEntity.getProductId())
-                .name(productEntity.getName())
-                .description(productEntity.getDescription())
-                .price(productEntity.getPrice())
-                .imageUrl(productEntity.getImageUrl())
-                .discountPrice(productEntity.getDiscountPrice())
-                .createdAt(productEntity.getCreatedAt())
-                .updatedAt(productEntity.getUpdatedAt())
-                .categoryId(productEntity.getCategory().getCategoryId())
-                .build();
+        return mappers.convertToProductDto(productEntity);
     }
 
     public List<ProductDto> getProductsWithDiscountPrice() {
         List<ProductEntity> productEntities = productRepository.findAllWithDiscountPrice();
-        List<ProductDto> result = new ArrayList<>();
-        for (ProductEntity productEntity : productEntities) {
-            ProductDto productDto = new ProductDto(productEntity.getProductId(),
-                    productEntity.getName(),
-                    productEntity.getDescription(),
-                    productEntity.getPrice(),
-                    productEntity.getImageUrl(),
-                    productEntity.getDiscountPrice(),
-                    productEntity.getCreatedAt(),
-                    productEntity.getUpdatedAt(),
-                    productEntity.getCategory().getCategoryId()
-            );
-            result.add(productDto);
-        }
-        return result;
+        return productEntities.stream()
+                .map(mappers::convertToProductDto)
+                .collect(Collectors.toList());
+
+//        List<ProductDto> result = new ArrayList<>();
+//        for (ProductEntity productEntity : productEntities) {
+//            ProductDto productDto = mappers.convertToProductDto(productEntity);
+//            result.add(productDto);
+//        }
+//        return result;
+    }
+
+    public List<ProductDto> getProductsWithDescriptionContainingAndPriceGreaterThan(String description, Double price) {
+        List<ProductEntity> productEntities = productRepository.findByDescriptionContainingAndPriceGreaterThan(description, price);
+        return productEntities.stream()
+                .map(mappers::convertToProductDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<ProductDto> getProductsWithCategoryAndDiscountPriceGreaterThan(CategoryDto categoryDto, Double discountPrice) {
+        List<ProductEntity> productEntities = productRepository.findByCategoryAndDiscountPriceGreaterThan(mappers.convertToCategoryEntity(categoryDto), discountPrice);
+        return productEntities.stream()
+                .map(mappers::convertToProductDto)
+                .collect(Collectors.toList());
     }
 
     public ProductDto insertProduct(ProductDto newProductDto) {
         if (newProductDto.getProductId() != null) {
             throw new IllegalArgumentException("ProductID should not be defined.");
         }
-        ProductEntity productEntity = ProductEntity.builder()
-                .name(newProductDto.getName())
-                .price(newProductDto.getPrice())
-                .discountPrice(newProductDto.getDiscountPrice())
-                .description(newProductDto.getDescription())
-                .imageUrl(newProductDto.getImageUrl())
-                .createdAt(newProductDto.getCreatedAt())
-                .updatedAt(newProductDto.getUpdatedAt())
-                .category(categoryRepository.getReferenceById(newProductDto.getCategoryId()))
-                .build();
+        ProductEntity productEntity = mappers.convertToProductEntity(newProductDto);
+//                ProductEntity.builder()
+//                .name(newProductDto.getName())
+//                .price(newProductDto.getPrice())
+//                .discountPrice(newProductDto.getDiscountPrice())
+//                .description(newProductDto.getDescription())
+//                .imageUrl(newProductDto.getImageUrl())
+//                .createdAt(newProductDto.getCreatedAt())
+//                .updatedAt(newProductDto.getUpdatedAt())
+//                .category(categoryRepository.getReferenceById(newProductDto.getCategoryId()))
+//                .build();
         productRepository.save(productEntity);
         return getProductById(newProductDto.getProductId());
     }
 
     public ProductDto updateProduct(Long id, ProductDto updatedProductDto) {
-        if (updatedProductDto.getProductId() != null) {
-            throw new IllegalArgumentException("ProductID should not be defined.");
+        if (updatedProductDto.getProductId() == null) {
+            throw new IllegalArgumentException("ProductID should be defined.");
         }
-        ProductEntity productEntity = productRepository.findById(id).orElse(new ProductEntity());
-        productEntity.setName(updatedProductDto.getName());
-        productEntity.setDescription(updatedProductDto.getDescription());
-        productEntity.setPrice(updatedProductDto.getPrice());
-        productEntity.setImageUrl(updatedProductDto.getImageUrl());
-        productEntity.setDiscountPrice(updatedProductDto.getDiscountPrice());
-        productEntity.setCreatedAt(updatedProductDto.getCreatedAt());
-        productEntity.setUpdatedAt(updatedProductDto.getUpdatedAt());
-        productEntity.setCategory(categoryRepository.getReferenceById(updatedProductDto.getCategoryId()));
-        productRepository.save(productEntity);
-        return getProductById(id);
+//        ProductEntity productEntity = productRepository.findById(id).orElse(new ProductEntity());
+//        productEntity.setName(updatedProductDto.getName());
+//        productEntity.setDescription(updatedProductDto.getDescription());
+//        productEntity.setPrice(updatedProductDto.getPrice());
+//        productEntity.setImageUrl(updatedProductDto.getImageUrl());
+//        productEntity.setDiscountPrice(updatedProductDto.getDiscountPrice());
+//        productEntity.setCreatedAt(updatedProductDto.getCreatedAt());
+//        productEntity.setUpdatedAt(updatedProductDto.getUpdatedAt());
+//        productEntity.setCategory(categoryRepository.getReferenceById(updatedProductDto.getCategoryId()));
+//        productRepository.save(productEntity);
+//        return getProductById(id);
+
+        ProductEntity updatedProductEntity = mappers.convertToProductEntity(updatedProductDto);
+
+        if (productRepository.findById(updatedProductDto.getProductId()).isPresent()) {
+            // Если объект есть в базе данных, мы его обновляем
+            ProductEntity returnedProductEntity = productRepository.save(updatedProductEntity);
+            return mappers.convertToProductDto(returnedProductEntity);
+        } else {
+            // Если объекта нет в базе данных, то нужно создать новый
+            updatedProductDto.setProductId(null);
+            return insertProduct(updatedProductDto);
+        }
     }
 
     public ProductDto updatePartProduct(Long productId, ProductDto updatedProductDto) {
@@ -218,9 +230,13 @@ public class ProductServiceJpa {
                 !updatedProductDto.getDiscountPrice().equals(existingProductEntity.getDiscountPrice())) {
             existingProductEntity.setDiscountPrice(updatedProductDto.getDiscountPrice());
         }
-        if (updatedProductDto.getCategoryId() != null &&
-                !updatedProductDto.getCategoryId().equals(existingProductEntity.getCategory().getCategoryId())) {
-            existingProductEntity.setCategory(categoryRepository.getReferenceById(updatedProductDto.getCategoryId()));
+//        if (updatedProductDto.getCategoryId() != null &&
+//                !updatedProductDto.getCategoryId().equals(existingProductEntity.getCategory().getCategoryId())) {
+//            existingProductEntity.setCategory(categoryRepository.getReferenceById(updatedProductDto.getCategoryId()));
+//        }
+        if (updatedProductDto.getCategory() != null &&
+                !updatedProductDto.getCategory().equals(mappers.convertToCategoryDto(existingProductEntity.getCategory()))) {
+            existingProductEntity.setCategory(categoryRepository.getReferenceById(updatedProductDto.getCategory().getCategoryId()));
         }
         return null;
     }

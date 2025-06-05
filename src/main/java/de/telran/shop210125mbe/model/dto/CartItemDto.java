@@ -12,11 +12,13 @@ import lombok.*;
 @Builder
 public class CartItemDto {
 
+    private Long cartItemId;
+
     private Long cartId;
 
-    private CartEntity cart;
+    private ProductLimitedDto product;
 
-    private Long productId;
+    // private Long productId;
 
     private Integer quantity;
 

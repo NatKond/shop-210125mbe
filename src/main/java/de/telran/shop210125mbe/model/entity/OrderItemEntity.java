@@ -8,8 +8,8 @@ import java.text.DecimalFormat;
 @NoArgsConstructor
 @Setter
 @Getter
-@ToString
-@EqualsAndHashCode
+@ToString(exclude = {"order"})
+@EqualsAndHashCode(exclude = {"order"})
 @Builder
 @Entity
 @Table(name = "OrderItems")
