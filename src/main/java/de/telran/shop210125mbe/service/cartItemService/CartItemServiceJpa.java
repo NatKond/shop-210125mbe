@@ -36,29 +36,29 @@ public class CartItemServiceJpa {
     void init() {
         System.out.println(YELLOW + "Cart item service JPA initialization" + RESET);
         CartItemEntity cartItemEntity1 = CartItemEntity.builder()
-                .cart(cartRepository.getById(1L))
-                .product(productRepository.getById(4L))
+                .cart(cartRepository.findById(1L).orElse(null))
+                .product(productRepository.findById(4L).orElse(null))
                 .quantity(2)
                 .build();
         cartItemRepository.save(cartItemEntity1);
 
         CartItemEntity cartItemEntity2 = CartItemEntity.builder()
-                .cart(cartRepository.getById(1L))
-                .product(productRepository.getById(2L))
+                .cart(cartRepository.findById(1L).orElse(null))
+                .product(productRepository.findById(2L).orElse(null))
                 .quantity(1)
                 .build();
         cartItemRepository.save(cartItemEntity2);
 
         CartItemEntity cartItemEntity3 = CartItemEntity.builder()
-                .cart(cartRepository.getById(2L))
-                .product(productRepository.getById(1L))
+                .cart(cartRepository.findById(2L).orElse(null))
+                .product(productRepository.findById(2L).orElse(null))
                 .quantity(3)
                 .build();
         cartItemRepository.save(cartItemEntity3);
 
         CartItemEntity cartItemEntity4 = CartItemEntity.builder()
-                .cart(cartRepository.getById(3L))
-                .product(productRepository.getById(3L))
+                .cart(cartRepository.findById(3L).orElse(null))
+                .product(productRepository.findById(3L).orElse(null))
                 .quantity(1)
                 .build();
         cartItemRepository.save(cartItemEntity4);

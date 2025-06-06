@@ -48,7 +48,7 @@ public class ProductController {
         return productServiceJpa.getProductByName(name);
     }
 
-    @GetMapping("/discount")
+    @GetMapping("/discount") //http://localhost:8080/product/discount
     public List<ProductDto> getProductsWithDiscount() {
         System.out.println(YELLOW + "Get all products with discount" + RESET);
         return productServiceJpa.getProductsWithDiscountPrice();
@@ -57,13 +57,13 @@ public class ProductController {
 
     @GetMapping("/description") // http://localhost:8080/product/description?description=lawn%20mower&price=100
     public List<ProductDto> getProductsWithDescriptionContainingAndPriceGreaterThan(@RequestParam String description, @RequestParam Double price) {
-        System.out.println(YELLOW + "Get all products with discount" + RESET);
+        System.out.println(YELLOW + "Get all products with description containing" + description + "and price greater than" + price + RESET);
         return productServiceJpa.getProductsWithDescriptionContainingAndPriceGreaterThan(description, price);
     }
 
     @GetMapping("/category")// http://localhost:8080/product/category?price=0
     public List<ProductDto> getProductsWithCategoryAndDiscountPriceGreaterThan(@RequestBody CategoryDto categoryDto, @RequestParam Double price) {
-        System.out.println(YELLOW + "Get all products with discount" + RESET);
+        System.out.println(YELLOW + "Get all products with category" + categoryDto.getName() + "and price greater than" + price + RESET);
         return productServiceJpa.getProductsWithCategoryAndDiscountPriceGreaterThan(categoryDto, price);
     }
 
