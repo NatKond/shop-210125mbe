@@ -34,7 +34,7 @@ class UserRepositoryTest {
                 .name("TestUser")
                 .email("test@i.com")
                 .build();
-        userRepository.save(userEntityTemplate);
+        userEntityTemplate = userRepository.save(userEntityTemplate);
     }
 
     @AfterEach
@@ -47,6 +47,7 @@ class UserRepositoryTest {
     void findByEmailNativeQueryTest() {
         //given
         final String emailExpected = "test@i.com";
+
         //when
         UserEntity userEntityActual = userRepository.findByEmailNativeQuery(emailExpected).orElseThrow();
 
@@ -58,8 +59,7 @@ class UserRepositoryTest {
     @Test
     void saveUpdateTest() {
         //given
-
-        Long expectedId = 1L;
+        Long expectedId = userEntityTemplate.getUserId();;
         UserEntity userEntityExpected = userRepository.findById(expectedId).orElseThrow();
         String newNameUserExpected = "NewTestUser";
         userEntityExpected.setName(newNameUserExpected);

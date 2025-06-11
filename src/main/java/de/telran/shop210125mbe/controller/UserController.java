@@ -35,22 +35,25 @@ public class UserController {
         return userServiceJpa.getUserById(id);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/email/{valueEmail}")  // http://localhost:8080/user/email/a@i.com
     public UserDto getByEmail(@PathVariable String valueEmail) {
         System.out.println(YELLOW + "Get user with email = " + valueEmail + RESET);
         return userServiceJpa.getByEmail(valueEmail);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/name/{valueName}")  // http://localhost:8080/user/name/Alice%20Johnson
     public List<UserDto> getByName(@PathVariable String valueName) {
         System.out.println(YELLOW + "Get user with name = " + valueName + RESET);
         return userServiceJpa.getByName(valueName);
     }
 
+    @ResponseStatus(HttpStatus.OK)
     @GetMapping("/phone/{valuePhone}") // http://localhost:8080/user/phone/%201234567890
-    public UserDto getByPhoneNumber(@PathVariable String valuePhoneNumber) {
-        System.out.println(YELLOW + "Get user with phone = " + valuePhoneNumber + RESET);
-        return userServiceJpa.getByPhone(valuePhoneNumber);
+    public UserDto getByPhoneNumber(@PathVariable String valuePhone) {
+        System.out.println(YELLOW + "Get user with phone = " + valuePhone + RESET);
+        return userServiceJpa.getByPhone(valuePhone);
     }
 
     @GetMapping("/find") // localhost:8080/user/find?name=Alice&email=alice.johnson@example.com

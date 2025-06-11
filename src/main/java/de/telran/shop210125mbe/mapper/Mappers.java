@@ -3,7 +3,6 @@ package de.telran.shop210125mbe.mapper;
 import de.telran.shop210125mbe.configure.MapperUtil;
 import de.telran.shop210125mbe.model.dto.*;
 import de.telran.shop210125mbe.model.entity.*;
-import de.telran.shop210125mbe.pojo.CartItem;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
