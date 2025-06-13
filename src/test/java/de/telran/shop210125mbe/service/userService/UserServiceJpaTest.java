@@ -2,54 +2,102 @@ package de.telran.shop210125mbe.service.userService;
 
 import de.telran.shop210125mbe.mapper.Mappers;
 import de.telran.shop210125mbe.model.dto.UserDto;
+import de.telran.shop210125mbe.model.dto.UserLimitedDto;
 import de.telran.shop210125mbe.model.entity.UserEntity;
-import de.telran.shop210125mbe.repository.CartRepository;
-import de.telran.shop210125mbe.repository.FavoriteRepository;
 import de.telran.shop210125mbe.repository.UserRepository;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
+@FieldDefaults(level = AccessLevel.PRIVATE) // присваивает область видимости по умолчанию для переменных класса
 @ExtendWith(MockitoExtension.class)
 class UserServiceJpaTest {
 
     @Mock // объект, поведение которого мы будем имитировать
     private UserRepository userRepositoryMock;
 
-//    @Mock
-//    private FavoriteRepository favoriteRepositoryMock;
-//
-//    @Mock
-//    private CartRepository cartRepositoryMock;
-
     @Mock
     private Mappers mappersMock;
 
     @InjectMocks
-    private UserServiceJpa userServiceJpa; // прямой класс, но может быть и интерфейс
+    private UserServiceJpa userServiceJpa; // класс, но может быть и интерфейс
+
+    UserEntity userEntity1;
+    UserEntity userEntity2;
+
+    @BeforeEach
+    void setUp() {
+        userEntity1 = UserEntity.builder()
+                .userId(1L)
+                .name("TestUser1")
+                .email("test1@i.com")
+                .phoneNumber("+49111222222222")
+                .build();
+        userEntity2 = UserEntity.builder()
+                .userId(2L)
+                .name("TestUser2")
+                .email("test2@i.com")
+                .phoneNumber("+49111222222222")
+                .build();
+    }
+
+    @Test
+    void initTest(){
+        // given
+        when(userRepositoryMock.save(any(UserEntity.class))).thenReturn(new UserEntity());
+
+        userServiceJpa.init();
+
+        verify(userRepositoryMock, times(3)).save(any(UserEntity.class));
+
+    }
+
 
     @Test
     void getAllUsersTest() {
+        // given
+        UserLimitedDto userLimitedDtoExpected1 = UserLimitedDto.builder()
+                .userId(userEntity1.getUserId())
+                .name(userEntity1.getName())
+                .build();
+        UserLimitedDto userLimitedDtoExpected2 = UserLimitedDto.builder()
+                .userId(userEntity2.getUserId())
+                .name(userEntity2.getName())
+                .build();
 
+        List<UserLimitedDto> userLimitedDtoListExpected = List.of(userLimitedDtoExpected1, userLimitedDtoExpected2);
+
+        when(userRepositoryMock.findAll()).thenReturn(List.of(userEntity1, userEntity2));
+        when(mappersMock.convertToUserLimitedDto(userEntity1)).thenReturn(userLimitedDtoExpected1);
+        when(mappersMock.convertToUserLimitedDto(userEntity2)).thenReturn(userLimitedDtoExpected2);
+
+        //when
+        List<UserLimitedDto> userLimitedDtoListActual = userServiceJpa.getAllUsers();
+
+        // then
+        assertNotNull(userLimitedDtoListActual);
+        assertEquals(userLimitedDtoListExpected, userLimitedDtoListActual);
+        verify(userRepositoryMock).findAll();
+        verify(mappersMock, times(2)).convertToUserLimitedDto(any(UserEntity.class));
     }
 
     @Test
     void getUserByIdTest() {
         // given
-        UserEntity userEntityExpected = UserEntity.builder()
-                .userId(1L)
-                .name("TestUser")
-                .email("test@i.com")
-                .phoneNumber("+49111222222222")
-                .build();
+        UserEntity userEntityExpected = userEntity1;
 
         UserDto userDtoExpected = UserDto.builder()
                 .userId(userEntityExpected.getUserId())
