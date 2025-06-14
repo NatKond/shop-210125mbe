@@ -130,6 +130,8 @@ public class UserServiceJpa {
         }
 
         UserEntity userEntity = userRepository.save(mappers.convertToUserEntity(newUserDto));
+        // return mappers.convertToUserDto(userEntity);
+        System.out.println(userEntity);
         return getUserById(userEntity.getUserId());
     }
 

@@ -7,7 +7,8 @@ import de.telran.shop210125mbe.model.entity.UserEntity;
 import de.telran.shop210125mbe.repository.UserRepository;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,19 +28,19 @@ import static org.mockito.Mockito.*;
 class UserServiceJpaTest {
 
     @Mock // объект, поведение которого мы будем имитировать
-    private UserRepository userRepositoryMock;
+    UserRepository userRepositoryMock;
 
     @Mock
-    private Mappers mappersMock;
+    Mappers mappersMock;
 
     @InjectMocks
-    private UserServiceJpa userServiceJpa; // класс, но может быть и интерфейс
+    UserServiceJpa userServiceJpa; // класс, но может быть и интерфейс
 
-    UserEntity userEntity1;
-    UserEntity userEntity2;
+    static UserEntity userEntity1;
+    static UserEntity userEntity2;
 
-    @BeforeEach
-    void setUp() {
+    @BeforeAll
+    static void setUp() {
         userEntity1 = UserEntity.builder()
                 .userId(1L)
                 .name("TestUser1")
@@ -54,6 +55,7 @@ class UserServiceJpaTest {
                 .build();
     }
 
+    @DisplayName("Test method init")
     @Test
     void initTest(){
         // given
@@ -65,7 +67,7 @@ class UserServiceJpaTest {
 
     }
 
-
+    @DisplayName("Test method getAllUsers")
     @Test
     void getAllUsersTest() {
         // given
@@ -90,8 +92,8 @@ class UserServiceJpaTest {
         // then
         assertNotNull(userLimitedDtoListActual);
         assertEquals(userLimitedDtoListExpected, userLimitedDtoListActual);
-        verify(userRepositoryMock).findAll();
-        verify(mappersMock, times(2)).convertToUserLimitedDto(any(UserEntity.class));
+        verify(userRepositoryMock).findAll(); // был ли запущен этот метод
+        verify(mappersMock, times(2)).convertToUserLimitedDto(any(UserEntity.class));  // был ли этот метод запущен 2 раза
     }
 
     @Test
@@ -100,10 +102,10 @@ class UserServiceJpaTest {
         UserEntity userEntityExpected = userEntity1;
 
         UserDto userDtoExpected = UserDto.builder()
-                .userId(userEntityExpected.getUserId())
-                .name(userEntityExpected.getName())
-                .email(userEntityExpected.getEmail())
-                .phoneNumber(userEntityExpected.getPhoneNumber())
+                .userId(userEntity1.getUserId())
+                .name(userEntity1.getName())
+                .email(userEntity1.getEmail())
+                .phoneNumber(userEntity1.getPhoneNumber())
                 .build();
 
         Long idExpected = 1L;
