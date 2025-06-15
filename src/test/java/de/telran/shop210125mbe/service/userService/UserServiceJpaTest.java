@@ -58,13 +58,11 @@ class UserServiceJpaTest {
     @DisplayName("Test method init")
     @Test
     void initTest(){
-        // given
         when(userRepositoryMock.save(any(UserEntity.class))).thenReturn(new UserEntity());
 
         userServiceJpa.init();
 
         verify(userRepositoryMock, times(3)).save(any(UserEntity.class));
-
     }
 
     @DisplayName("Test method getAllUsers")
@@ -89,7 +87,7 @@ class UserServiceJpaTest {
         //when
         List<UserLimitedDto> userLimitedDtoListActual = userServiceJpa.getAllUsers();
 
-        // then
+        //then
         assertNotNull(userLimitedDtoListActual);
         assertEquals(userLimitedDtoListExpected, userLimitedDtoListActual);
         verify(userRepositoryMock).findAll(); // был ли запущен этот метод
@@ -158,5 +156,7 @@ class UserServiceJpaTest {
 
     @Test
     void deleteUserByIdTest() {
+        userServiceJpa.deleteUserById(1L);
+        verify(userRepositoryMock).deleteById(1L);
     }
 }

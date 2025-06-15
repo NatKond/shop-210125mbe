@@ -62,7 +62,6 @@ class UserControllerTest {
                 .phoneNumber("+49111222222222")
                 .build();
 
-
         when(userServiceJpa.getUserById(anyLong())).thenReturn(expected);
         // anyLong - при педече любого объекта типа Long будет возвращаться объект
         mockMvc.perform(get("/user/{id}", 1))
