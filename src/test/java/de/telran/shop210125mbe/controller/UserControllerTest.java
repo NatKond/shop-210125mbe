@@ -4,6 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import de.telran.shop210125mbe.model.dto.UserDto;
 import de.telran.shop210125mbe.model.dto.UserLimitedDto;
 import de.telran.shop210125mbe.service.userService.UserServiceJpa;
+import lombok.AccessLevel;
+import lombok.experimental.FieldDefaults;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -12,6 +15,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -20,6 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+@FieldDefaults(level = AccessLevel.PRIVATE)
 @WebMvcTest(UserController.class)
 class UserControllerTest {
 
@@ -32,12 +37,45 @@ class UserControllerTest {
     @Autowired
     private ObjectMapper objectMapper; // для преобразования объекта в Json
 
+    static UserLimitedDto userLimitedDto1;
+    static UserLimitedDto userLimitedDto2;
+    static UserDto userDto1;
+    static UserDto userDto2;
+
+    @BeforeAll
+    static void setUp() {
+        userLimitedDto1 = UserLimitedDto.builder()
+                .userId(1L)
+                .name("TestUser1")
+                .email("test1@i.com")
+                .phoneNumber("+49111222222222")
+                .build();
+        userLimitedDto2 = UserLimitedDto.builder()
+                .userId(2L)
+                .name("TestUser2")
+                .email("test2@i.com")
+                .phoneNumber("+49111333333333")
+                .build();
+        userDto1 = UserDto.builder()
+                .userId(1L)
+                .name("TestUser1")
+                .email("test1@i.com")
+                .phoneNumber("+49111222222222")
+                .build();
+        userDto2 = UserDto.builder()
+                .userId(2L)
+                .name("TestUser2")
+                .email("test2@i.com")
+                .phoneNumber("+49111333333333")
+                .build();
+    }
+
     @Test
     void getAllUsersTest() throws Exception {
         //given
         List<UserLimitedDto> expected = List.of(
-                new UserLimitedDto(1L, "TestName1", "test1@i.com", "+49111222222222"),
-                new UserLimitedDto(2L, "TestName2", "test2@i.com", "+49111333333333")
+                userLimitedDto1,
+                userLimitedDto2
         );
 
         //when
@@ -47,44 +85,39 @@ class UserControllerTest {
         mockMvc.perform(get("/user")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$..userId").exists());// проверят существует ли в json тег userId
+                .andExpectAll(
+                        status().isOk(),
+                        content().json(objectMapper.writeValueAsString(expected)));
+        //.andExpect(jsonPath("$..userId").exists());// проверят существует ли в json тег userId
         //.andExpect(jsonPath("$..userId").value(1)) // проветяет что поле userId = 1
         //.andExpect(jsonPath("$..name").value("TestName1")); // проветяет что поле name = TestName1
     }
 
     @Test
     void getUserTest() throws Exception {
-        UserDto expected = UserDto.builder()
-                .userId(1L)
-                .name("TestName1")
-                .email("test1@i.com")
-                .phoneNumber("+49111222222222")
-                .build();
+        UserDto expected = userDto1;
 
-        when(userServiceJpa.getUserById(anyLong())).thenReturn(expected);
+        when(userServiceJpa.getUserById(expected.getUserId())).thenReturn(expected);
         // anyLong - при педече любого объекта типа Long будет возвращаться объект
-        mockMvc.perform(get("/user/{id}", 1))
+        mockMvc.perform(get("/user/{id}", expected.getUserId()))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.userId").exists())
-                .andExpect(jsonPath("$.userId").value(1)) // проветяет что поле userId = 1
-                .andExpect(jsonPath("$.name").value("TestName1") // проветяет что поле name = TestName1
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.userId").exists(),
+                        jsonPath("$.userId").value(expected.getUserId()), // проветяет что поле userId = 1
+                        jsonPath("$.name").value(expected.getName()), // проветяет что поле name = TestName1
+                        jsonPath("$.email").value(expected.getEmail()),
+                        jsonPath("$.phoneNumber").value(expected.getPhoneNumber())
                 );
     }
 
     @Test
     void getByEmailTest() throws Exception {
-        UserDto expected = UserDto.builder()
-                .userId(1L)
-                .name("TestName1")
-                .email("test1@i.com")
-                .phoneNumber("+49111222222222")
-                .build();
+        UserDto expected = userDto1;
         when(userServiceJpa.getByEmail(anyString())).thenReturn(expected);
 
         // anyString - при педече любого объекта типа String будет возвращаться объект
-        mockMvc.perform(get("/user/email/{valueEmail}", "test1@i.com"))
+        mockMvc.perform(get("/user/email/{valueEmail}", expected.getEmail()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.email").exists())
@@ -95,51 +128,50 @@ class UserControllerTest {
     @Test
     void getByNameTest() throws Exception {
         List<UserDto> expected = List.of(
-                UserDto.builder()
-                        .userId(1L)
-                        .name("TestName")
-                        .email("test1@i.com")
-                        .phoneNumber("+49111222222222")
-                        .build(),
-                UserDto.builder()
-                        .userId(2L)
-                        .name("TestName")
-                        .email("test2@i.com")
-                        .phoneNumber("+49111333333333")
-                        .build()
+                userDto1,
+                userDto2
         );
-        when(userServiceJpa.getByName(anyString())).thenReturn(expected);
+        when(userServiceJpa.getByName(userDto1.getName().substring(0,5))).thenReturn(expected);
 
         // anyString - при педече любого объекта типа String будет возвращаться объект
-        mockMvc.perform(get("/user/name/{valueName}", "TestName"))
+        mockMvc.perform(get("/user/name/{valueName}", userDto1.getName().substring(0,5)))
                 .andDo(print())
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$..name").exists()
-                //.andExpect(jsonPath("$..name").value("TestName")
+                .andExpectAll(
+                        status().isOk(),
+                        content().json(objectMapper.writeValueAsString(expected))
                 );
     }
 
     @Test
     void getByPhoneNumberTest() throws Exception {
-        UserDto expected = UserDto.builder()
-                .userId(1L)
-                .name("TestName1")
-                .email("test1@i.com")
-                .phoneNumber("+49111222222222")
-                .build();
-        when(userServiceJpa.getByPhone("+49111222222222")).thenReturn(expected);
+        UserDto expected = userDto1;
+        when(userServiceJpa.getByPhone(anyString())).thenReturn(expected);
 
         // anyString - при педече любого объекта типа String будет возвращаться объект
-        mockMvc.perform(get("/user/phone/{valuePhone}", "+49111222222222"))
+        mockMvc.perform(get("/user/phone/{valuePhone}", expected.getPhoneNumber()))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.phoneNumber").exists())
-                .andExpect(jsonPath("$.phoneNumber").value("+49111222222222")
+                .andExpect(jsonPath("$.phoneNumber").value(expected.getPhoneNumber())
                 );
     }
 
     @Test
-    void getByNameAndEmailTest() {
+    void getByNameAndEmailTest() throws Exception {
+        UserLimitedDto expected = userLimitedDto1;
+        when(userServiceJpa.getByNameAndEmail("Test","test1@i.com")).thenReturn(List.of(expected));
+
+        mockMvc.perform(get("/user/find")
+                .param("name","Test")
+                .param("email","test1@i.com"))
+                .andDo(print())
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$[0].userId").exists(),
+                        jsonPath("$[0].userId").value(expected.getUserId()),
+                        jsonPath("$[0].name").value(expected.getName()),
+                        jsonPath("$[0].email").value(expected.getEmail())
+                );
     }
 
     @Test
@@ -157,48 +189,73 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(
                                 """
-                                {
-                                     "userId": null,
-                                     "name": "TestName"
-                                }
-                                """
+                                        {
+                                             "userId": null,
+                                             "name": "TestName"
+                                        }
+                                        """
                         ))
                 .andDo(print())
-                .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.userId").exists())
-                .andExpect(jsonPath("$.userId").value(idExpected))
-                .andExpect(jsonPath("$.name").value("TestName")
+                .andExpectAll(
+                        status().isCreated(),
+                        jsonPath("$.userId").exists(),
+                        jsonPath("$.userId").value(idExpected),
+                        jsonPath("$.name").value(expected.getName())
                 );
     }
 
     @Test
     void updateUserTest() throws Exception {
-        UserDto expected = UserDto.builder()
-                .userId(1L)
-                .name("TestName1")
-                .email("test1@i.com")
-                .phoneNumber("+49111222222222")
-                .build();
+        UserDto expected = userDto1;
 
         when(userServiceJpa.updateUser(expected.getUserId(), expected)).thenReturn(expected);
-        mockMvc.perform(put("/user/{id}",1L)
+        mockMvc.perform(put("/user/{id}", expected.getUserId())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(expected)
                         ))
                 .andDo(print())
-                .andExpect(status().isAccepted())
-                .andExpect(jsonPath("$.userId").exists())
-                .andExpect(jsonPath("$.userId").value(1L))
-                .andExpect(jsonPath("$.name").value("TestName1")
+                .andExpectAll(
+                        status().isAccepted(),
+                        jsonPath("$.userId").exists(),
+                        jsonPath("$.userId").value(expected.getUserId()),
+                        jsonPath("$.name").value(expected.getName())
                 );
     }
 
     @Test
-    void updatePartUserTest() {
+    void updatePartUserTest() throws Exception {
+        UserDto expected = userDto1;
+
+        when(userServiceJpa.updatePartUser(expected.getUserId(), expected)).thenReturn(expected);
+
+        mockMvc.perform(patch("/user/{id}", expected.getUserId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(expected)
+                        ))
+                .andDo(print())
+                .andExpectAll(
+                        status().isAccepted(),
+                        jsonPath("$.userId").exists(),
+                        jsonPath("$.userId").value(expected.getUserId()),
+                        jsonPath("$.name").value(expected.getName())
+                );
     }
 
     @Test
-    void updatePhoneNumberTest() {
+    void updatePhoneNumberTest() throws Exception {
+        UserLimitedDto expected = userLimitedDto1;
+        String phoneExpected = userLimitedDto1.getPhoneNumber();
+
+        when(userServiceJpa.updatePhoneNumber(expected.getUserId(),phoneExpected)).thenReturn(expected);
+
+        mockMvc.perform(patch("/user/phone/{id}", expected.getUserId())
+                        .param("phone",phoneExpected))
+                .andDo(print())
+                .andExpectAll(
+                        status().isOk(),
+                        jsonPath("$.phoneNumber").exists(),
+                        jsonPath("$.phoneNumber").value(expected.getPhoneNumber())
+                );
     }
 
     @Test
@@ -206,6 +263,16 @@ class UserControllerTest {
     }
 
     @Test
-    void handlerIllegalArgumentExceptionTest() {
+    void handlerIllegalArgumentExceptionTest() throws Exception {
+
+        Long idExpected = 5L;
+
+        when(userServiceJpa.getUserById(idExpected)).thenThrow(new NoSuchElementException("User with id = "+ idExpected +"is not found."));
+
+        mockMvc.perform(get("/user/{id}", idExpected))
+                .andDo(print())
+                .andExpectAll(
+                        status().isNotFound()
+                );
     }
 }

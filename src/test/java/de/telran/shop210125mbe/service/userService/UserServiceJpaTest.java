@@ -94,6 +94,7 @@ class UserServiceJpaTest {
         verify(mappersMock, times(2)).convertToUserLimitedDto(any(UserEntity.class));  // был ли этот метод запущен 2 раза
     }
 
+    @DisplayName("Test method getUserById")
     @Test
     void getUserByIdTest() {
         // given
@@ -122,41 +123,42 @@ class UserServiceJpaTest {
         verify(mappersMock, times(1)).convertToUserDto(any(UserEntity.class)); // запущен ли этот метод 1 раз
     }
 
-    @Test
-    void getByEmailTest() {
-    }
-
-    @Test
-    void getByNameTest() {
-    }
-
-    @Test
-    void getByNameAndEmailTest() {
-    }
-
-    @Test
-    void getByPhoneTest() {
-    }
-
-    @Test
-    void createUserTest() {
-    }
-
-    @Test
-    void updateUserTest() {
-    }
-
-    @Test
-    void updatePartUseTest() {
-    }
-
-    @Test
-    void updatePhoneNumberTest() {
-    }
-
+    @DisplayName("Test method deleteUserById")
     @Test
     void deleteUserByIdTest() {
         userServiceJpa.deleteUserById(1L);
         verify(userRepositoryMock).deleteById(1L);
     }
+//
+//    @Test
+//    void getByEmailTest() {
+//    }
+//
+//    @Test
+//    void getByNameTest() {
+//    }
+//
+//    @Test
+//    void getByNameAndEmailTest() {
+//    }
+//
+//    @Test
+//    void getByPhoneTest() {
+//    }
+//
+//    @Test
+//    void createUserTest() {
+//    }
+//
+//    @Test
+//    void updateUserTest() {
+//    }
+//
+//    @Test
+//    void updatePartUseTest() {
+//    }
+//
+//    @Test
+//    void updatePhoneNumberTest() {
+//    }
 }

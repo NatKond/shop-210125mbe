@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static de.telran.shop210125mbe.textFormatting.*;
 
@@ -84,7 +85,7 @@ public class UserController {
     }
 
     @PatchMapping("/phone/{id}") // http://localhost:8080/user/phone/1?phone=+1234567890&name=Odarka
-    public UserLimitedDto updatePhoneNumber(@PathVariable Long id, @RequestParam String phoneNumber) {
+    public UserLimitedDto updatePhoneNumber(@PathVariable Long id, @RequestParam(name = "phone") String phoneNumber) {
         System.out.println(YELLOW + "Update user phone number" + RESET);
         return userServiceJpa.updatePhoneNumber(id, phoneNumber);
     }
@@ -96,8 +97,8 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(IllegalArgumentException.class)
-    public String handlerIllegalArgumentException(IllegalArgumentException exception) {
+    @ExceptionHandler(NoSuchElementException.class)
+    public String handlerNoSuchElementException(NoSuchElementException exception) {
         return "Product controller: " + exception.getMessage();
     }
 }
