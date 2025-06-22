@@ -31,8 +31,8 @@ public class Mappers {
                 .addMappings(mapper -> {
                             mapper.skip(UserDto::setPasswordHash);
                             //mapper.skip((userDto, userEntityNew) -> userDto.setPasswordHash(((UserEntity)userEntityNew).getPasswordHash()));
-                            mapper.skip(UserDto::setPhoneNumber);
-                            mapper.skip(UserDto::setEmail);
+                            //mapper.skip(UserDto::setPhoneNumber);
+                            //mapper.skip(UserDto::setEmail);
                             mapper.skip(UserDto::setFavorites);
                             // mapper.map(user->user.getCart().getCartId(), UserDto::setCartId);
                         }
@@ -66,12 +66,12 @@ public class Mappers {
     public UserLimitedDto convertToUserLimitedDto(UserEntity userEntity) {
         if (userEntity == null) return new UserLimitedDto();
 
-        modelMapper.typeMap(UserEntity.class, UserLimitedDto.class)
-                .addMappings(mapper -> {
-                            mapper.skip(UserLimitedDto::setPhoneNumber);
-                            mapper.skip(UserLimitedDto::setEmail);
-                        }
-                );
+//        modelMapper.typeMap(UserEntity.class, UserLimitedDto.class)
+//                .addMappings(mapper -> {
+//                            mapper.skip(UserLimitedDto::setPhoneNumber);
+//                            mapper.skip(UserLimitedDto::setEmail);
+//                        }
+//                );
 
         return modelMapper.map(userEntity, UserLimitedDto.class);
     }

@@ -1,10 +1,15 @@
 package de.telran.shop210125mbe.controller;
 
+import de.telran.shop210125mbe.aspect.LogTimeAnnotation;
 import de.telran.shop210125mbe.model.dto.UserDto;
 import de.telran.shop210125mbe.model.dto.UserLimitedDto;
 import de.telran.shop210125mbe.service.userService.UserServiceJpa;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.*;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,6 +20,7 @@ import static de.telran.shop210125mbe.textFormatting.*;
 @RequiredArgsConstructor // будет создан кнструктор, аргументом которого будет поле private final
 @RestController
 @RequestMapping(value = "/user")
+@Validated
 public class UserController {
 
 //    @Autowired
@@ -31,14 +37,14 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDto getUser(@PathVariable Long id) {
+    public UserDto getUser(@PathVariable @Positive Long id) {
         System.out.println(YELLOW + "Get " + id + " user" + RESET);
         return userServiceJpa.getUserById(id);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/email/{valueEmail}")  // http://localhost:8080/user/email/a@i.com
-    public UserDto getByEmail(@PathVariable String valueEmail) {
+    public UserDto getByEmail(@PathVariable @Email String valueEmail) {
         System.out.println(YELLOW + "Get user with email = " + valueEmail + RESET);
         return userServiceJpa.getByEmail(valueEmail);
     }
@@ -65,33 +71,33 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
-    public UserDto createUser(@RequestBody UserDto newUserDto) {
+    public UserDto createUser(@RequestBody /* @NotNull @Valid */ UserDto newUserDto) {
         System.out.println(YELLOW + "Insert user" + RESET);
         return userServiceJpa.createUser(newUserDto);
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PutMapping("/{id}")
-    public UserDto updateUser(@PathVariable Long id, @RequestBody UserDto updatedUserDto) {
+    public UserDto updateUser(@PathVariable @Positive Long id, @RequestBody @NotNull @Valid UserDto updatedUserDto) {
         System.out.println(YELLOW + "Update user" + RESET);
         return userServiceJpa.updateUser(id, updatedUserDto);
     }
 
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PatchMapping("/{id}")
-    public UserDto updatePartUser(@PathVariable Long id, @RequestBody UserDto updatedUserDto) {
+    public UserDto updatePartUser(@PathVariable @Positive Long id, @RequestBody @NotNull @Valid UserDto updatedUserDto) {
         System.out.println(YELLOW + "Update user partially" + RESET);
         return userServiceJpa.updatePartUser(id, updatedUserDto);
     }
 
     @PatchMapping("/phone/{id}") // http://localhost:8080/user/phone/1?phone=+1234567890&name=Odarka
-    public UserLimitedDto updatePhoneNumber(@PathVariable Long id, @RequestParam(name = "phone") String phoneNumber) {
+    public UserLimitedDto updatePhoneNumber(@PathVariable @Positive Long id, @RequestParam(name = "phone") @NotBlank @Size(min = 20) String phoneNumber) {
         System.out.println(YELLOW + "Update user phone number" + RESET);
         return userServiceJpa.updatePhoneNumber(id, phoneNumber);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteUser(@PathVariable Long id) {
+    public void deleteUser(@PathVariable @Positive Long id) {
         System.out.println(YELLOW + "Delete user" + RESET);
         userServiceJpa.deleteUserById(id);
     }

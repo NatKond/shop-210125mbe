@@ -57,7 +57,7 @@ class UserServiceJpaTest {
 
     @DisplayName("Test method init")
     @Test
-    void initTest(){
+    void initTest() {
         when(userRepositoryMock.save(any(UserEntity.class))).thenReturn(new UserEntity());
 
         userServiceJpa.init();
@@ -107,7 +107,7 @@ class UserServiceJpaTest {
                 .phoneNumber(userEntity1.getPhoneNumber())
                 .build();
 
-        Long idExpected = 1L;
+        Long idExpected = userEntity1.getUserId();
 
         when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.of(userEntityExpected));
         when(mappersMock.convertToUserDto(userEntityExpected)).thenReturn(userDtoExpected);
@@ -120,8 +120,246 @@ class UserServiceJpaTest {
         assertEquals(userEntityExpected.getUserId(), userDtoActual.getUserId());
         assertEquals(userDtoExpected, userDtoActual);
         verify(userRepositoryMock).findById(idExpected); // был ли запущем метод findById
-        verify(mappersMock, times(1)).convertToUserDto(any(UserEntity.class)); // запущен ли этот метод 1 раз
+        verify(mappersMock).convertToUserDto(any(UserEntity.class)); // запущен ли этот метод 1 раз
     }
+
+    @DisplayName("Test method getByEmail")
+    @Test
+    void getByEmailTest() {
+        // given
+        UserEntity userEntityExpected = userEntity1;
+
+        UserDto userDtoExpected = UserDto.builder()
+                .userId(userEntity1.getUserId())
+                .name(userEntity1.getName())
+                .email(userEntity1.getEmail())
+                .phoneNumber(userEntity1.getPhoneNumber())
+                .build();
+
+        String emailExpected = userEntity1.getEmail();
+
+        when(userRepositoryMock.findByEmailNativeQuery(anyString())).thenReturn(Optional.of(userEntityExpected));
+        when(mappersMock.convertToUserDto(userEntityExpected)).thenReturn(userDtoExpected);
+
+        // when
+        UserDto userDtoActual = userServiceJpa.getByEmail(emailExpected);
+
+        // then
+        assertNotNull(userDtoActual);
+        assertEquals(userEntityExpected.getEmail(), userDtoActual.getEmail());
+        assertEquals(userDtoExpected, userDtoActual);
+        verify(userRepositoryMock).findByEmailNativeQuery(emailExpected);
+        verify(mappersMock).convertToUserDto(any(UserEntity.class));
+    }
+
+    @DisplayName("Test method getByName")
+    @Test
+    void getByNameTest() {
+        // given
+        UserEntity userEntityExpected = userEntity1;
+
+        UserDto userDtoExpected = UserDto.builder()
+                .userId(userEntity1.getUserId())
+                .name(userEntity1.getName())
+                .email(userEntity1.getEmail())
+                .phoneNumber(userEntity1.getPhoneNumber())
+                .build();
+
+        List<UserDto> userDtoListExpected = List.of(userDtoExpected);
+
+        String nameExpected = userEntity1.getName();
+
+        when(userRepositoryMock.findByNameHql(anyString())).thenReturn(List.of(userEntityExpected));
+        when(mappersMock.convertToUserDto(userEntityExpected)).thenReturn(userDtoExpected);
+
+        // when
+        List<UserDto> userDtoListActual = userServiceJpa.getByName(nameExpected);
+
+        // then
+        assertNotNull(userDtoListActual);
+        assertEquals(userEntityExpected.getName(), userDtoListActual.getFirst().getName());
+        assertEquals(userDtoListExpected, userDtoListActual);
+        verify(userRepositoryMock).findByNameHql(nameExpected);
+        verify(mappersMock).convertToUserDto(any(UserEntity.class));
+    }
+
+    @DisplayName("Test method getByPhone")
+    @Test
+    void getByPhoneTest() {
+        // given
+        UserEntity userEntityExpected = userEntity1;
+
+        UserDto userDtoExpected = UserDto.builder()
+                .userId(userEntity1.getUserId())
+                .name(userEntity1.getName())
+                .email(userEntity1.getEmail())
+                .phoneNumber(userEntity1.getPhoneNumber())
+                .build();
+
+        String phoneExpected = userEntity1.getPhoneNumber();
+
+        when(userRepositoryMock.findByPhoneNumber(anyString())).thenReturn(Optional.of(userEntityExpected));
+        when(mappersMock.convertToUserDto(userEntityExpected)).thenReturn(userDtoExpected);
+
+        // when
+        UserDto userDtoActual = userServiceJpa.getByPhone(phoneExpected);
+
+        // then
+        assertNotNull(userDtoActual);
+        assertEquals(userEntityExpected.getPhoneNumber(), userDtoActual.getPhoneNumber());
+        assertEquals(userDtoExpected, userDtoActual);
+        verify(userRepositoryMock).findByPhoneNumber(phoneExpected);
+        verify(mappersMock).convertToUserDto(any(UserEntity.class));
+    }
+
+    @DisplayName("Test method createUser")
+    @Test
+    void createUserTest() {
+        // given
+        UserEntity userEntityExpected = userEntity1;
+
+        UserEntity newUserEntity = UserEntity.builder()
+                .name(userEntity1.getName())
+                .email(userEntity1.getEmail())
+                .phoneNumber(userEntity1.getPhoneNumber())
+                .build();
+
+        UserDto newUserDto = UserDto.builder()
+                .name(userEntity1.getName())
+                .email(userEntity1.getEmail())
+                .phoneNumber(userEntity1.getPhoneNumber())
+                .build();
+
+        UserDto userDtoExpected = UserDto.builder()
+                .userId(userEntity1.getUserId())
+                .name(userEntity1.getName())
+                .email(userEntity1.getEmail())
+                .phoneNumber(userEntity1.getPhoneNumber())
+                .build();
+
+        when(userRepositoryMock.save(any(UserEntity.class))).thenReturn(userEntityExpected);
+        when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.of(userEntityExpected));
+        when(mappersMock.convertToUserEntity(newUserDto)).thenReturn(newUserEntity);
+        when(mappersMock.convertToUserDto(userEntityExpected)).thenReturn(userDtoExpected);
+
+        // when
+        UserDto userDtoActual = userServiceJpa.createUser(newUserDto);
+
+        // then
+        assertNotNull(userDtoActual);
+        assertEquals(userDtoExpected, userDtoActual);
+        verify(userRepositoryMock).save(newUserEntity);
+        verify(userRepositoryMock).findById(anyLong());
+        verify(mappersMock).convertToUserDto(any(UserEntity.class));
+        verify(mappersMock).convertToUserEntity(any(UserDto.class));
+    }
+
+    @DisplayName("Test method updateUser")
+    @Test
+    void updateUserTest() {
+        // given
+        UserEntity userEntityExpected = userEntity1;
+
+        UserDto userDtoExpected = UserDto.builder()
+                .userId(userEntity1.getUserId())
+                .name(userEntity1.getName())
+                .email(userEntity1.getEmail())
+                .phoneNumber(userEntity1.getPhoneNumber())
+                .build();
+
+        when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.of(userEntityExpected));
+        when(userRepositoryMock.save(any(UserEntity.class))).thenReturn(userEntityExpected);
+        when(mappersMock.convertToUserDto(userEntityExpected)).thenReturn(userDtoExpected);
+        when(mappersMock.convertToUserEntity(userDtoExpected)).thenReturn(userEntityExpected);
+
+        // when
+        UserDto userDtoActual = userServiceJpa.updateUser(userDtoExpected.getUserId(), userDtoExpected);
+
+        // then
+        assertNotNull(userDtoActual);
+        assertEquals(userDtoExpected, userDtoActual);
+        verify(userRepositoryMock).save(userEntityExpected);
+        verify(mappersMock).convertToUserDto(any(UserEntity.class));
+        verify(mappersMock).convertToUserEntity(any(UserDto.class));
+
+    }
+
+    @DisplayName("Test method updatePartUser")
+    @Test
+    void updatePartUserTest() {
+        // given
+        UserEntity existingUserEntity = userEntity1;
+
+        UserDto updatedUserDto = UserDto.builder()
+                .phoneNumber("+49111333333333")
+                .build();
+
+        UserEntity userEntityExpected = UserEntity.builder()
+                .userId(userEntity1.getUserId())
+                .name(userEntity1.getName())
+                .email(userEntity1.getEmail())
+                .phoneNumber(updatedUserDto.getPhoneNumber())
+                .build();
+
+        UserDto userDtoExpected = UserDto.builder()
+                .userId(userEntity1.getUserId())
+                .name(userEntity1.getName())
+                .email(userEntity1.getEmail())
+                .phoneNumber(updatedUserDto.getPhoneNumber())
+                .build();
+
+        when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.of(existingUserEntity));
+        when(userRepositoryMock.save(any(UserEntity.class))).thenReturn(userEntityExpected);
+        when(mappersMock.convertToUserDto(userEntityExpected)).thenReturn(userDtoExpected);
+
+        // when
+        UserDto userDtoActual = userServiceJpa.updatePartUser(userDtoExpected.getUserId(), updatedUserDto);
+
+        // then
+        assertNotNull(userDtoActual);
+        assertEquals(userDtoExpected, userDtoActual);
+        verify(userRepositoryMock).findById(userDtoExpected.getUserId());
+        verify(userRepositoryMock).save(userEntityExpected);
+        verify(mappersMock).convertToUserDto(any(UserEntity.class));
+    }
+
+    @DisplayName("Test method updatePhoneNumber")
+    @Test
+    void updatePhoneNumberTest() {
+        // given
+        UserEntity existingUserEntity = userEntity1;
+        Long idExpected = existingUserEntity.getUserId();
+        String phoneExpected = "+49111333333333";
+
+        UserEntity userEntityExpected = UserEntity.builder()
+                .userId(userEntity1.getUserId())
+                .name(userEntity1.getName())
+                .email(userEntity1.getEmail())
+                .phoneNumber(phoneExpected)
+                .build();
+
+        UserLimitedDto userLimitedDtoExpected = UserLimitedDto.builder()
+                .userId(userEntity1.getUserId())
+                .name(userEntity1.getName())
+                .email(userEntity1.getEmail())
+                .phoneNumber(phoneExpected)
+                .build();
+
+        when(userRepositoryMock.setPhoneNumber(anyLong(), anyString())).thenReturn(1);
+        when(userRepositoryMock.findById(anyLong())).thenReturn(Optional.of(userEntityExpected));
+        when(mappersMock.convertToUserLimitedDto(userEntityExpected)).thenReturn(userLimitedDtoExpected);
+
+        // when
+        UserLimitedDto userLimitedDtoActual = userServiceJpa.updatePhoneNumber(idExpected, phoneExpected);
+
+        // then
+        assertNotNull(userLimitedDtoActual);
+        assertEquals(userLimitedDtoExpected, userLimitedDtoActual);
+        verify(userRepositoryMock).findById(userLimitedDtoExpected.getUserId());
+        verify(userRepositoryMock).setPhoneNumber(idExpected,phoneExpected);
+        verify(mappersMock).convertToUserLimitedDto(any(UserEntity.class));
+    }
+
 
     @DisplayName("Test method deleteUserById")
     @Test
@@ -129,36 +367,4 @@ class UserServiceJpaTest {
         userServiceJpa.deleteUserById(1L);
         verify(userRepositoryMock).deleteById(1L);
     }
-//
-//    @Test
-//    void getByEmailTest() {
-//    }
-//
-//    @Test
-//    void getByNameTest() {
-//    }
-//
-//    @Test
-//    void getByNameAndEmailTest() {
-//    }
-//
-//    @Test
-//    void getByPhoneTest() {
-//    }
-//
-//    @Test
-//    void createUserTest() {
-//    }
-//
-//    @Test
-//    void updateUserTest() {
-//    }
-//
-//    @Test
-//    void updatePartUseTest() {
-//    }
-//
-//    @Test
-//    void updatePhoneNumberTest() {
-//    }
 }

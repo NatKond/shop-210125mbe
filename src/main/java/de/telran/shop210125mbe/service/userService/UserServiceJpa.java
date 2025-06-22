@@ -7,9 +7,12 @@ import de.telran.shop210125mbe.model.entity.UserEntity;
 import de.telran.shop210125mbe.pojo.Role;
 import de.telran.shop210125mbe.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
+import jakarta.validation.Valid;
+import jakarta.validation.executable.ValidateOnExecution;
 import lombok.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -20,6 +23,7 @@ import static de.telran.shop210125mbe.textFormatting.YELLOW;
 
 @RequiredArgsConstructor // будет создан конструктор, аргументы которого будут переменные
 @Service
+@Validated
 public class UserServiceJpa {
 
     // @Autowired
@@ -124,7 +128,7 @@ public class UserServiceJpa {
         return mappers.convertToUserDto(userEntity);
     }
 
-    public UserDto createUser(UserDto newUserDto) {
+    public UserDto createUser(@Valid UserDto newUserDto) {
         if (newUserDto.getUserId() != null) {
             throw new IllegalArgumentException("UserID should not be defined.");
         }
@@ -184,8 +188,8 @@ public class UserServiceJpa {
                 !updatedUserDto.getPhoneNumber().equals(existingUserEntity.getPhoneNumber())) {
             existingUserEntity.setPhoneNumber(updatedUserDto.getPhoneNumber());
         }
-        userRepository.save(existingUserEntity);
-        return getUserById(id);
+        UserEntity userEntitySaved = userRepository.save(existingUserEntity);
+        return mappers.convertToUserDto(userEntitySaved);
     }
 
     public UserLimitedDto updatePhoneNumber(Long id, String phoneNumber) {

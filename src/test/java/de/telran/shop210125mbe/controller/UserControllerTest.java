@@ -259,7 +259,13 @@ class UserControllerTest {
     }
 
     @Test
-    void deleteUserTest() {
+    void deleteUserTest() throws Exception {
+
+        Long id = userDto1.getUserId();
+
+        mockMvc.perform(delete("/user/{id}", id))
+                .andDo(print())
+                .andExpect(status().isOk());
     }
 
     @Test

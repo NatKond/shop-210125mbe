@@ -54,7 +54,7 @@ public class UserIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        // подготовка, наобходимо заполнить БД тестовыми данными, как при тестировании Repository
+        // подготовка, наобходимо заполнить БД тестовыми данными перед каждым тестом
         userEntity1 = UserEntity.builder()
                 //.userId(1L)
                 .name("TestUser1")
@@ -85,6 +85,7 @@ public class UserIntegrationTest {
 
     @AfterEach
     void tearDown(){
+        // завершение, наобходимо очистить БД после каждого
         userRepository.deleteById(userEntity1.getUserId());
         userRepository.deleteById(userEntity2.getUserId());
     }
@@ -108,8 +109,6 @@ public class UserIntegrationTest {
 
     @Test
     void getUserByIdIntegrationTest() throws Exception {
-        //Long idExpected = userEntity1.getUserId();
-
         Long idExpected = userEntity1.getUserId();
 
         //when(userRepository.findById(idExpected)).thenReturn(Optional.of(userEntity1));

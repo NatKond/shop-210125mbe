@@ -1,6 +1,7 @@
 package de.telran.shop210125mbe.controller;
 
 
+import de.telran.shop210125mbe.aspect.LogTimeAnnotation;
 import de.telran.shop210125mbe.model.dto.CategoryDto;
 import de.telran.shop210125mbe.model.dto.ProductDto;
 import de.telran.shop210125mbe.pojo.Category;
@@ -31,12 +32,14 @@ public class ProductController {
     private final ProductServiceJpa productServiceJpa;
 
     @GetMapping
+    @LogTimeAnnotation
     public List<ProductDto> getAllProducts() {
         System.out.println(YELLOW + "Get all products" + RESET);
         return productServiceJpa.getAllProducts();
     }
 
     @GetMapping("/{id}") // http://localhost:8080/product/find/1
+    @LogTimeAnnotation
     public ProductDto getProduct(@PathVariable(name = "id") Long productId) {
         System.out.println("Get " + productId + " product" + RESET);
         return productServiceJpa.getProductById(productId);
