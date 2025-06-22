@@ -180,8 +180,8 @@ public class ProductServiceJpa {
 //                .updatedAt(newProductDto.getUpdatedAt())
 //                .category(categoryRepository.getReferenceById(newProductDto.getCategoryId()))
 //                .build();
-        productRepository.save(productEntity);
-        return getProductById(newProductDto.getProductId());
+        ProductEntity productEntitySaved = productRepository.save(productEntity);
+        return mappers.convertToProductDto(productEntitySaved);
     }
 
     public ProductDto updateProduct(Long id, ProductDto updatedProductDto) {
