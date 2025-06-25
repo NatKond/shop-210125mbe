@@ -22,7 +22,7 @@ public class ReplacementAspect {
 
     @Around("callAtProductControllerPublic")
     public Object aroundCallAt(ProceedingJoinPoint pjp) throws Throwable {
-        log.info("+++ " + pjp.getSignature().getName());
+        log.info("+++ {}", pjp.getSignature().getName());
         Object retVal = null;
         retVal = pjp.proceed();
         UserDto userDtoTest2 = new UserDto(

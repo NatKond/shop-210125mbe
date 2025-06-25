@@ -33,11 +33,12 @@ public class AdviceController {
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<?> handleConstraintViolationException(ConstraintViolationException exception) {
         Map<String, ?> errors = exception.getConstraintViolations().stream()
-                .collect(Collectors.toMap(violation -> violation.getPropertyPath().toString(), ConstraintViolation::getMessage));
+                .collect(Collectors.toMap(violation -> violation.getPropertyPath().toString(),
+                        violation -> violation.getMessage()));
         //Collectors.mapping(ConstraintViolation::getMessage, Collectors.toList())));
 
         //return "Invalid data in controller layer: " + errors;
-        return new ResponseEntity<>(errors, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -46,7 +47,7 @@ public class AdviceController {
                 .collect(Collectors.toMap(FieldError::getField, fieldError -> fieldError.getDefaultMessage() != null ? fieldError.getDefaultMessage() : "Invalid data"));
                         //FieldError::getDefaultMessage)
                         //Collectors.mapping(FieldError::getDefaultMessage, Collectors.toList()));
-        return new ResponseEntity<>(errors, new HttpHeaders(), HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errors,HttpStatus.BAD_REQUEST);
     }
 //    private Map<String, List<String>> getErrorsMap(List<String> errors) {
 //        Map<String, List<String>> errorsResponse = new HashMap<>();

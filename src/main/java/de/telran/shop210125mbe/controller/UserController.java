@@ -32,12 +32,14 @@ public class UserController {
 
     private final UserServiceJpa userServiceJpa;
 
+    @LogTimeAnnotation
     @GetMapping
     public List<UserLimitedDto> getAllUsers() {
         System.out.println(YELLOW + "Get all users" + RESET);
         return userServiceJpa.getAllUsers();
     }
 
+    @LogTimeAnnotation
     @GetMapping("/{id}")
     public UserDto getUser(@PathVariable @Positive Long id) {
         System.out.println(YELLOW + "Get " + id + " user" + RESET);

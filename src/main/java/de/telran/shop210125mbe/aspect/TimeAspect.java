@@ -10,8 +10,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+
+import static de.telran.shop210125mbe.textFormatting.PURPLE;
+import static de.telran.shop210125mbe.textFormatting.RESET;
 
 @Aspect
 @Component
@@ -25,19 +29,15 @@ public class TimeAspect {
 
     @Before("callAtUserControllerPublic()")
     public void beforeCallAtMethod(JoinPoint jp) {
-        log.info("--- start --- {} time -> {}", jp.toShortString(), LocalDateTime.now());
+        log.info("{}--- start --- {} time -> {}{}", PURPLE, jp.toShortString(), LocalTime.now(), RESET);
         String args = Arrays.stream(jp.getArgs())
                 .map(Object::toString)
                 .collect(Collectors.joining(","));
-        log.info("before {}, args = [{}]", jp.toShortString(), args);
+        log.info("{}before {}, args = [{}]{}", PURPLE, jp.toShortString(), args, RESET);
     }
 
     @After("callAtUserControllerPublic()")
-    private void afterCallAtMethod(JoinPoint jp){
-        log.info("--- end --- {} time -> {}", jp.toShortString(), LocalDateTime.now());
-        String args = Arrays.stream(jp.getArgs())
-                .map(Object::toString)
-                .collect(Collectors.joining(","));
-        log.info("after {}, args = [{}]", jp.toShortString(), args);
+    private void afterCallAtMethod(JoinPoint jp) {
+        log.info("{}--- end --- {} time -> {}{}", PURPLE, jp.toShortString(), LocalTime.now(), RESET);
     }
 }
