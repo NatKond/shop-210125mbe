@@ -5,6 +5,7 @@ import de.telran.shop210125mbe.pojo.Favorite;
 import de.telran.shop210125mbe.pojo.User;
 import de.telran.shop210125mbe.service.favoriteService.FavoriteServiceInterface;
 import de.telran.shop210125mbe.service.favoriteService.FavoriteServiceJpa;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import static de.telran.shop210125mbe.textFormatting.YELLOW;
 @RestController
 @RequestMapping(value = "/favorite")
 @RequiredArgsConstructor
+@Hidden
 public class FavoriteController {
 
     private final FavoriteServiceJpa favoriteServiceJpa;

@@ -50,8 +50,8 @@ public class ProductServiceJpa {
                 .discountPrice(0.0)
                 .description("Sturdy garden trowel with wooden handle")
                 .imageUrl("https://example.com/images/garden_trowel.jpg")
-                .createdAt(new Timestamp(System.currentTimeMillis()))
-                .updatedAt(new Timestamp(System.currentTimeMillis()))
+                //.createdAt(new Timestamp(System.currentTimeMillis()))
+                //.updatedAt(new Timestamp(System.currentTimeMillis()))
                 //.category(categoryRepository.getReferenceById(1L))
                 .category(categoryRepository.findById(1L).orElse(null))
                 .build();
@@ -71,8 +71,8 @@ public class ProductServiceJpa {
                 .discountPrice(35.99)
                 .description("Heavy-duty pruning shears for trimming bushes and small branches")
                 .imageUrl("https://example.com/images/pruning_shears.jpg")
-                .createdAt(new Timestamp(System.currentTimeMillis()))
-                .updatedAt(new Timestamp(System.currentTimeMillis()))
+                //.createdAt(new Timestamp(System.currentTimeMillis()))
+                //.updatedAt(new Timestamp(System.currentTimeMillis()))
                 //.category(categoryRepository.getReferenceById(1L))
                 .category(categoryRepository.findById(1L).orElse(null))
                 .build();
@@ -83,8 +83,8 @@ public class ProductServiceJpa {
                 .price(349.99)
                 .description("Gas-powered lawn mower with 21-inch cutting deck")
                 .imageUrl("https://example.com/images/lawn_mower.jpg")
-                .createdAt(new Timestamp(System.currentTimeMillis()))
-                .updatedAt(new Timestamp(System.currentTimeMillis()))
+                //.createdAt(new Timestamp(System.currentTimeMillis()))
+                //.updatedAt(new Timestamp(System.currentTimeMillis()))
                 //.category(categoryRepository.getReferenceById(2L))
                 .category(categoryRepository.findById(2L).orElse(null))
                 .build();
@@ -96,8 +96,8 @@ public class ProductServiceJpa {
                 .discountPrice(699.99)
                 .description("Gas-powered lawn mower with 21-inch cutting deck")
                 .imageUrl("https://example.com/images/lawn_mower.jpg")
-                .createdAt(new Timestamp(System.currentTimeMillis()))
-                .updatedAt(new Timestamp(System.currentTimeMillis()))
+                //.createdAt(new Timestamp(System.currentTimeMillis()))
+                //.updatedAt(new Timestamp(System.currentTimeMillis()))
                 //.category(categoryRepository.getReferenceById(3L))
                 .category(categoryRepository.findById(3L).orElse(null))
                 .build();

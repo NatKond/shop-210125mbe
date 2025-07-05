@@ -4,6 +4,7 @@ import de.telran.shop210125mbe.model.dto.CartItemDto;
 import de.telran.shop210125mbe.pojo.CartItem;
 import de.telran.shop210125mbe.service.cartItemService.CartItemServiceInterface;
 import de.telran.shop210125mbe.service.cartItemService.CartItemServiceJpa;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +18,7 @@ import static java.awt.Color.YELLOW;
 @RestController
 @RequestMapping(value = "/cartItem")
 @RequiredArgsConstructor
+@Hidden
 public class CartItemController {
 
     //    @Autowired

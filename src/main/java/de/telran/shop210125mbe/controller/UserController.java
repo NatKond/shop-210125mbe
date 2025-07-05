@@ -5,11 +5,13 @@ import de.telran.shop210125mbe.model.dto.Marker;
 import de.telran.shop210125mbe.model.dto.UserDto;
 import de.telran.shop210125mbe.model.dto.UserLimitedDto;
 import de.telran.shop210125mbe.service.userService.UserServiceJpa;
-import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.ExternalDocumentation;
+import io.swagger.v3.oas.annotations.Hidden;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.*;
 import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +25,7 @@ import static de.telran.shop210125mbe.textFormatting.*;
 @RestController
 @RequestMapping(value = "/user")
 @Validated
-public class UserController {
+public class UserController implements UserControllerInt{
 
 //    @Autowired
 //    @Qualifier("userServiceJpa")
@@ -41,25 +43,28 @@ public class UserController {
 
     @LogTimeAnnotation
     @GetMapping("/{id}")
-    public UserDto getUser(@PathVariable @Positive Long id) {
+    public UserDto getUserById(@PathVariable @Positive Long id) {
         System.out.println(YELLOW + "Get " + id + " user" + RESET);
         return userServiceJpa.getUserById(id);
     }
 
+    @Hidden
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/email/{valueEmail}")  // http://localhost:8080/user/email/a@i.com
-    public UserDto getByEmail(@PathVariable @Email(message = "Should be a well-formed email address") String valueEmail) {
+    public UserDto getUserByEmail(@PathVariable @Email(message = "Should be a well-formed email address") String valueEmail) {
         System.out.println(YELLOW + "Get user with email = " + valueEmail + RESET);
         return userServiceJpa.getByEmail(valueEmail);
     }
 
+    @Hidden
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/name/{valueName}")  // http://localhost:8080/user/name/Alice%20Johnson
-    public List<UserDto> getByName(@PathVariable @Size(min = 2, max = 30, message = "Invalid name: Should be from 2 to 30 characters") String valueName) {
+    public List<UserDto> getUserByName(@PathVariable @Size(min = 2, max = 30, message = "Invalid name: Should be from 2 to 30 characters") String valueName) {
         System.out.println(YELLOW + "Get user with name = " + valueName + RESET);
         return userServiceJpa.getByName(valueName);
     }
 
+    @Hidden
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/phone/{valuePhone}") // http://localhost:8080/user/phone/%201234567890
     public UserDto getByPhoneNumber(
@@ -71,6 +76,7 @@ public class UserController {
         return userServiceJpa.getByPhone(valuePhone);
     }
 
+    @Hidden
     @GetMapping("/find") // localhost:8080/user/find?name=Alice&email=alice.johnson@example.com
     public List<UserLimitedDto> getByNameAndEmail(
             @RequestParam
@@ -82,7 +88,6 @@ public class UserController {
         System.out.println(YELLOW + "Get user with name = " + name + " and email = " + valueEmail + RESET);
         return userServiceJpa.getByNameAndEmail(name, valueEmail);
     }
-
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping
@@ -110,6 +115,7 @@ public class UserController {
         return userServiceJpa.updateUser(id, updatedUserDto);
     }
 
+    @Hidden
     @ResponseStatus(HttpStatus.ACCEPTED)
     @PatchMapping("/{id}")
     public UserDto updatePartUser(@PathVariable @Positive Long id, @RequestBody @NotNull UserDto updatedUserDto) {
@@ -117,6 +123,7 @@ public class UserController {
         return userServiceJpa.updatePartUser(id, updatedUserDto);
     }
 
+    @Hidden
     @PatchMapping("/phone/{id}") // http://localhost:8080/user/phone/1?phone=+1234567890&name=Odarka
     public UserLimitedDto updatePhoneNumber(
             @PathVariable

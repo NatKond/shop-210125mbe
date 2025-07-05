@@ -2,6 +2,7 @@ package de.telran.shop210125mbe.controller;
 
 import de.telran.shop210125mbe.pojo.OrderItem;
 import de.telran.shop210125mbe.service.orderItemService.OrderItemServiceInterface;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import static de.telran.shop210125mbe.textFormatting.YELLOW;
 @RestController
 @RequestMapping(value = "/orderItem")
 @RequiredArgsConstructor
+@Hidden
 public class OrderItemController {
 
     //    @Autowired

@@ -1,10 +1,12 @@
 package de.telran.shop210125mbe.model.entity;
-
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -18,6 +20,17 @@ import java.util.Set;
 @Entity
 @Table(name = "Products")
 public class ProductEntity {
+
+//    @PrePersist
+//    protected void onCreate() {
+//        createdAt = Timestamp.valueOf(LocalDateTime.now());
+//        updatedAt = Timestamp.valueOf(LocalDateTime.now());
+//    }
+//
+//    @PreUpdate
+//    protected void onUpdate() {
+//        updatedAt = Timestamp.valueOf(LocalDateTime.now());
+//    }
 
     @Id
     @Column(name = "ProductID")
@@ -42,9 +55,11 @@ public class ProductEntity {
     @Column(name = "DiscountPrice")
     private Double discountPrice;
 
-    @Column(name = "CreatedAt")
+    @CreationTimestamp
+    @Column(name = "CreatedAt", updatable = false, nullable = false)
     private Timestamp createdAt;
 
+    @UpdateTimestamp
     @Column(name = "UpdatedAt")
     private Timestamp updatedAt;
 

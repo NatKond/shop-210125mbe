@@ -2,6 +2,7 @@ package de.telran.shop210125mbe.controller;
 
 import de.telran.shop210125mbe.model.dto.CategoryDto;
 import de.telran.shop210125mbe.service.categoryService.CategoryServiceJpa;
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -16,6 +17,7 @@ import static java.awt.Color.YELLOW;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping(value = "/category") // localhost:8080/category
+@Hidden
 public class CategoryController {
 
 //    @Autowired

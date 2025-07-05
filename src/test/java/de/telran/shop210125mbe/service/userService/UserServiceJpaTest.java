@@ -37,6 +37,7 @@ class UserServiceJpaTest {
     UserServiceJpa userServiceJpa; // класс, но может быть и интерфейс
 
     static UserEntity userEntity1;
+
     static UserEntity userEntity2;
 
     @BeforeAll

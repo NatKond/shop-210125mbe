@@ -49,25 +49,25 @@ public class FavoriteServiceJpa {
         favoriteRepository.save(favorite2);
 
         FavoriteEntity favorite3 = FavoriteEntity.builder()
-                .user(userRepository.findById(2L).orElse(null))
+                .user(userRepository.findById(1L).orElse(null))
                 .product(productRepository.findById(3L).orElse(null))
                 .build();
         favoriteRepository.save(favorite3);
 
         FavoriteEntity favorite4 = FavoriteEntity.builder()
-                .user(userRepository.findById(3L).orElse(null))
+                .user(userRepository.findById(2L).orElse(null))
                 .product(productRepository.findById(4L).orElse(null))
                 .build();
         favoriteRepository.save(favorite4);
 
         FavoriteEntity favorite5 = FavoriteEntity.builder()
-                .user(userRepository.findById(4L).orElse(null))
+                .user(userRepository.findById(3L).orElse(null))
                 .product(productRepository.findById(1L).orElse(null))
                 .build();
         favoriteRepository.save(favorite5);
 
         FavoriteEntity favorite6 = FavoriteEntity.builder()
-                .user(userRepository.findById(4L).orElse(null))
+                .user(userRepository.findById(3L).orElse(null))
                 .product(productRepository.findById(2L).orElse(null))
                 .build();
         favoriteRepository.save(favorite6);

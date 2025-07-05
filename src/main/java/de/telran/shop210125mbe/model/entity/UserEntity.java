@@ -33,7 +33,7 @@ public class UserEntity {
     @Column(name = "PhoneNumber")
     private String phoneNumber;
 
-    @Column(name = "PhoneHash")
+    @Column(name = "PasswordHash")
     private String passwordHash;
 
     @Enumerated(EnumType.STRING)
