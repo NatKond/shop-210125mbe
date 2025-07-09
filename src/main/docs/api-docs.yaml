@@ -1,0 +1,1291 @@
+openapi: 3.0.3
+info:
+  title: Graduation project
+  description: 'OpenApi documentation for graduation project: online garden store'
+  contact:
+    name: Natalia Kondratenko
+  version: 1.0.0
+servers:
+- url: http://localhost:8082
+  description: Local env
+tags:
+- name: Categories
+  description: Category Controller
+- name: Favorites
+  description: Favorite Controller
+- name: Products
+  description: Product Controller
+- name: Users
+  description: User Controller
+paths:
+  /v1/users/{userId}:
+    get:
+      tags:
+      - Users
+      summary: Get user by ID
+      operationId: getUserById
+      parameters:
+      - name: userId
+        in: path
+        description: ID of the user
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: true
+          minimum: 0
+        example: 1
+      responses:
+        '200':
+          description: Successfully retrieved user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDto'
+              examples:
+                Alice Johnson:
+                  description: Alice Johnson
+                  value:
+                    userId: 1
+                    name: Alice Johnson
+                    email: alice.johnson@example.com
+                    phoneNumber: '+1234567890'
+                    role: ROLE_USER
+                    favorites:
+                    - favoriteId: 1
+                      product:
+                        productId: 5
+                        name: Tulip Bulb Mix (10 pcs)
+                        description: Colorful tulip bulbs perfect for spring blooms
+                        price: 9.49
+                        discountPrice: 6.99
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                User not found:
+                  description: User not found
+                  value:
+                    exception: UserNotFoundException
+                    message: User with id 12 not found
+                    status: 404
+                    timestamp: 2025-07-08 12:33:30.849474
+    put:
+      tags:
+      - Users
+      summary: Update an existing user
+      operationId: updateUser
+      parameters:
+      - name: userId
+        in: path
+        description: ID of the user to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: true
+          minimum: 0
+        example: 4
+      requestBody:
+        description: User to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequestDto'
+            examples:
+              David Green:
+                description: David Green
+                value:
+                  name: Alice Johnson
+                  email: alice.johnson@example.com
+                  phoneNumber: '+1234567890'
+                  password: '123455632'
+              Frank Green:
+                description: Frank Green
+                value:
+                  name: Bob Smith
+                  email: bob.smith@example.com
+                  phoneNumber: '+1987654321'
+                  password: '123455632'
+        required: true
+      responses:
+        '202':
+          description: User successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDto'
+              examples:
+                Alice Johnson:
+                  description: Alice Johnson
+                  value:
+                    userId: 1
+                    name: Alice Johnson
+                    email: alice.johnson@example.com
+                    phoneNumber: '+1234567890'
+                    role: ROLE_USER
+                    favorites: []
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Validation error:
+                  description: Validation error
+                  value:
+                    exception: MethodArgumentNotValidException
+                    messages:
+                      password: Password should have at least 5 characters
+                      phoneNumber: Phone number should have at least 10 characters
+                      email: Should be a well-formed email address
+                    status: 400
+                    timestamp: 2025-07-08 12:37:38.600215
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                User not found:
+                  description: User not found
+                  value:
+                    exception: UserNotFoundException
+                    message: User with id 12 not found
+                    status: 404
+                    timestamp: 2025-07-08 12:33:30.849474
+        '409':
+          description: User with this email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                User with email already exists:
+                  description: User with email already exists
+                  value:
+                    exception: UserWithEmailAlreadyExistsException
+                    message: User with email bob@example.com already exists
+                    status: 409
+                    timestamp: 2025-07-08 12:38:35.709413
+    delete:
+      tags:
+      - Users
+      summary: Delete user by ID
+      operationId: deleteUserById
+      parameters:
+      - name: userId
+        in: path
+        description: ID of the user to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: true
+          minimum: 0
+        example: 1
+      responses:
+        '204':
+          description: User successfully deleted
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                User not found:
+                  description: User not found
+                  value:
+                    exception: UserNotFoundException
+                    message: User with id 12 not found
+                    status: 404
+                    timestamp: 2025-07-08 12:33:30.849474
+  /v1/products/{productId}:
+    get:
+      tags:
+      - Products
+      summary: Get product by ID
+      operationId: getProductById
+      parameters:
+      - name: productId
+        in: path
+        description: ID of the product to retrieve
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: true
+          minimum: 0
+        example: 1
+      responses:
+        '200':
+          description: Product found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponseDto'
+              examples:
+                Product example:
+                  description: Product example
+                  value:
+                    productId: 1
+                    name: All-Purpose Plant Fertilizer
+                    description: Balanced NPK formula for all types of plants
+                    price: 11.99
+                    discountPrice: 8.99
+                    categoryId: 1
+                    imageUrl: https://example.com/images/fertilizer_all_purpose.jpg
+                    createdAt: 2025-07-08 20:42:12.980366
+                    updatedAt: 2025-07-08 20:42:12.980366
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Product not found:
+                  description: Product not found
+                  value:
+                    exception: ProductNotFoundException
+                    message: Product with id 12 not found
+                    status: 404
+                    timestamp: 2025-07-08 20:43:40.833577
+    put:
+      tags:
+      - Products
+      summary: Update existing product
+      operationId: updateProduct
+      parameters:
+      - name: productId
+        in: path
+        description: ID of the product to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: true
+          minimum: 0
+        example: 1
+      requestBody:
+        description: Product to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreateRequestDto'
+            examples:
+              Plant Fertilizer:
+                description: Plant Fertilizer
+                value:
+                  name: All-Purpose Plant Fertilizer
+                  description: Balanced NPK formula for all types of plants
+                  price: 15.99
+                  discountPrice: 10.99
+                  categoryId: 1
+                  imageUrl: https://example.com/images/fertilizer_all_purpose.jpg
+              Tomato Feed:
+                description: Tomato Feed
+                value:
+                  name: Organic Tomato Feed
+                  description: Organic liquid fertilizer ideal for tomatoes and vegetables
+                  price: 15.99
+                  categoryId: 1
+                  imageUrl: https://example.com/images/fertilizer_tomato_feed.jpg
+        required: true
+      responses:
+        '202':
+          description: Product updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponseDto'
+              examples:
+                Plant Fertilizer:
+                  description: Plant Fertilizer
+                  value:
+                    productId: 1
+                    name: All-Purpose Plant Fertilizer
+                    description: Balanced NPK formula for all types of plants
+                    price: 15.99
+                    discountPrice: 10.99
+                    categoryId: 1
+                    imageUrl: https://example.com/images/fertilizer_all_purpose.jpg
+                    createdAt: 2025-07-08 20:42:12.980366
+                    updatedAt: 2025-07-08 20:50:30.157989
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Validation error:
+                  description: Validation error
+                  value:
+                    exception: MethodArgumentNotValidException
+                    messages:
+                      price: Price is required
+                      imageUrl: Image URL must be valid
+                      name: Name must not be blank
+                    status: 400
+                    timestamp: 2025-07-08 20:48:30.631028
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Product not found:
+                  description: Product not found
+                  value:
+                    exception: ProductNotFoundException
+                    message: Product with id 12 not found
+                    status: 404
+                    timestamp: 2025-07-08 20:43:40.833577
+    delete:
+      tags:
+      - Products
+      summary: Delete product by ID
+      operationId: deleteProductById
+      parameters:
+      - name: productId
+        in: path
+        description: ID of the product to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: true
+          minimum: 0
+        example: 1
+      responses:
+        '204':
+          description: Product successfully deleted
+        '404':
+          description: Product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Product not found:
+                  description: Product not found
+                  value:
+                    exception: ProductNotFoundException
+                    message: Product with id 12 not found
+                    status: 404
+                    timestamp: 2025-07-08 20:43:40.833577
+  /v1/categories/{categoryId}:
+    get:
+      tags:
+      - Categories
+      summary: Get category by ID
+      operationId: getCategoryById
+      parameters:
+      - name: categoryId
+        in: path
+        description: ID of the category
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: true
+          minimum: 0
+        example: 1
+      responses:
+        '200':
+          description: Category found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponseDto'
+              examples:
+                Category with products:
+                  description: Category with products
+                  value:
+                    categoryId: 1
+                    name: Fertilizer
+                    products:
+                    - productId: 1
+                      name: All-Purpose Plant Fertilizer
+                      description: Balanced NPK formula for all types of plants
+                      price: 11.99
+                      discountPrice: 8.99
+                      categoryId: 1
+        '404':
+          description: Category not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Category not found:
+                  description: Category not found
+                  value:
+                    exception: CategoryNotFoundException
+                    message: Category with id 12 not found
+                    status: 404
+                    timestamp: 2025-07-08 22:06:22.675691
+    put:
+      tags:
+      - Categories
+      summary: Update existing category
+      operationId: updateCategory
+      parameters:
+      - name: categoryId
+        in: path
+        description: ID of the category to update
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: true
+          minimum: 0
+        example: 1
+      requestBody:
+        description: Category to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryCreateRequestDto'
+            examples:
+              Compost and soil amendments:
+                description: Compost and soil amendments
+                value:
+                  name: Compost and soil amendments
+              Garden decor:
+                description: Garden decor
+                value:
+                  name: Garden decor
+              Raised beds:
+                description: Raised beds
+                value:
+                  name: Raised beds
+        required: true
+      responses:
+        '202':
+          description: Category successfully updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponseDto'
+              examples:
+                Updated category:
+                  description: Updated category
+                  value:
+                    categoryId: 1
+                    name: Compost and soil amendments
+                    products:
+                    - productId: 1
+                      name: All-Purpose Plant Fertilizer
+                      description: Balanced NPK formula for all types of plants
+                      price: 11.99
+                      discountPrice: 8.99
+                      categoryId: 1
+                    - productId: 2
+                      name: Organic Tomato Feed
+                      description: Organic liquid fertilizer ideal for tomatoes and
+                        vegetables
+                      price: 13.99
+                      discountPrice: 10.49
+                      categoryId: 1
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Validation error:
+                  description: Validation error
+                  value:
+                    exception: MethodArgumentNotValidException
+                    messages:
+                      name: Category name should be from 2 to 30 characters
+                    status: 400
+                    timestamp: 2025-07-08 22:10:32.856346
+        '409':
+          description: Category name conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Conflict error:
+                  description: Conflict error
+                  value:
+                    exception: CategoryWithNameAlreadyExistsException
+                    message: Category with name Compost and soil amendments already
+                      exists.
+                    status: 409
+                    timestamp: 2025-07-08 22:10:18.679310
+    delete:
+      tags:
+      - Categories
+      summary: Delete category by ID
+      operationId: deleteCategory
+      parameters:
+      - name: categoryId
+        in: path
+        description: ID of the category to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: true
+          minimum: 0
+        example: 1
+      responses:
+        '204':
+          description: Category successfully deleted
+        '404':
+          description: Category not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Category not found:
+                  description: Category not found
+                  value:
+                    exception: CategoryNotFoundException
+                    message: Category with id 12 not found
+                    status: 404
+                    timestamp: 2025-07-08 22:06:22.675691
+  /v1/users/register:
+    post:
+      tags:
+      - Users
+      summary: Create a new user
+      operationId: createUser
+      requestBody:
+        description: User to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCreateRequestDto'
+            examples:
+              Eve White:
+                description: Eve White
+                value:
+                  name: Eve White
+                  email: eve.white@example.com
+                  phoneNumber: '+1333444555'
+                  password: '12345'
+              Frank Green:
+                description: Frank Green
+                value:
+                  name: Frank Green
+                  email: frank.green@example.com
+                  phoneNumber: '+1444555666'
+                  password: '12345'
+              David Black:
+                description: David Black
+                value:
+                  name: David Black
+                  email: david.Black@example.com
+                  phoneNumber: '+1222333555'
+                  password: '123456'
+        required: true
+      responses:
+        '201':
+          description: User successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponseDto'
+              examples:
+                Alice Johnson:
+                  description: Alice Johnson
+                  value:
+                    userId: 6
+                    name: Frank Green
+                    email: frank.green@example.com
+                    phoneNumber: '+1444555666'
+                    role: ROLE_USER
+                    favorites: []
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Validation error:
+                  description: Validation error
+                  value:
+                    exception: MethodArgumentNotValidException
+                    messages:
+                      password: Password should have at least 5 characters
+                      phoneNumber: Phone number should have at least 10 characters
+                      email: Should be a well-formed email address
+                    status: 400
+                    timestamp: 2025-07-08 12:37:38.600215
+        '409':
+          description: User with this email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                User with email already exists:
+                  description: User with email already exists
+                  value:
+                    exception: UserWithEmailAlreadyExistsException
+                    message: User with email bob@example.com already exists
+                    status: 409
+                    timestamp: 2025-07-08 12:38:35.709413
+  /v1/products:
+    get:
+      tags:
+      - Products
+      summary: Get all products
+      operationId: getAllProducts
+      parameters:
+      - name: categoryId
+        in: query
+        description: Filter by category ID
+        required: false
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: true
+          minimum: 0
+        example: 1
+      - name: discount
+        in: query
+        description: Filter by discount availability
+        required: false
+        schema:
+          type: boolean
+        example: true
+      - name: minPrice
+        in: query
+        description: Minimum product price
+        required: false
+        schema:
+          type: number
+          exclusiveMinimum: true
+          minimum: 0
+        example: 5
+      - name: maxPrice
+        in: query
+        description: Maximum product price
+        required: false
+        schema:
+          type: number
+          exclusiveMinimum: true
+          minimum: 0
+        example: 15
+      - name: sortBy
+        in: query
+        description: Field to sort by
+        required: false
+        schema:
+          type: string
+          pattern: productId|name|price|category|discountPrice|createdAt|updatedAt
+        example: price
+      - name: sortDirection
+        in: query
+        description: 'Sort direction: true for ASC, false for DESC'
+        required: false
+        schema:
+          type: boolean
+        example: true
+      responses:
+        '200':
+          description: Successfully retrieved list of products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductShortResponseDto'
+              examples:
+                List of products:
+                  description: List of products
+                  value:
+                  - productId: 1
+                    name: All-Purpose Plant Fertilizer
+                    description: Balanced NPK formula for all types of plants
+                    price: 15.99
+                    discountPrice: 10.99
+                    categoryId: 1
+                  - productId: 2
+                    name: Organic Tomato Feed
+                    description: Organic liquid fertilizer ideal for tomatoes and
+                      vegetables
+                    price: 13.99
+                    discountPrice: 10.49
+                    categoryId: 1
+    post:
+      tags:
+      - Products
+      summary: Create a new product
+      operationId: createProduct
+      requestBody:
+        description: Product to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductCreateRequestDto'
+            examples:
+              Trowel:
+                description: Trowel
+                value:
+                  name: Ergonomic Garden Trowel
+                  description: Durable stainless steel blade with ergonomic rubber
+                    grip
+                  price: 12.5
+                  discountPrice: 9.99
+                  categoryId: 4
+                  imageUrl: https://example.com/images/garden_trowel.jpg
+              Pot:
+                description: Pot
+                value:
+                  name: Terracotta Flower Pot
+                  description: Handcrafted terracotta pot ideal for indoor and outdoor
+                    use
+                  price: 7.75
+                  discountPrice: 6.5
+                  categoryId: 5
+                  imageUrl: https://example.com/images/terracotta_pot.jpg
+              Seeds Pack:
+                description: Seeds Pack
+                value:
+                  name: Lavender Seeds Pack
+                  description: Fragrant lavender seeds for sunny gardens
+                  price: 4.99
+                  discountPrice: 3.49
+                  categoryId: 3
+                  imageUrl: https://example.com/images/lavender_seeds.jpg
+              Sprayer:
+                description: Sprayer
+                value:
+                  name: Battery Powered Garden Sprayer
+                  description: Lightweight sprayer ideal for pesticide and fertilizer
+                    application
+                  price: 39.95
+                  discountPrice: 34.99
+                  categoryId: 4
+                  imageUrl: https://example.com/images/garden_sprayer.jpg
+        required: true
+      responses:
+        '201':
+          description: Product created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductResponseDto'
+              examples:
+                Created product:
+                  description: Created product
+                  value:
+                    productId: 11
+                    name: Ergonomic Garden Trowel
+                    description: Durable stainless steel blade with ergonomic rubber
+                      grip
+                    price: 12.5
+                    discountPrice: 9.99
+                    categoryId: 2
+                    imageUrl: https://example.com/images/garden_trowel.jpg
+                    createdAt: 2025-07-08 21:14:12.679652
+                    updatedAt: 2025-07-08 21:14:12.679688
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Validation error:
+                  description: Validation error
+                  value:
+                    exception: MethodArgumentNotValidException
+                    messages:
+                      price: Price is required
+                      imageUrl: Image URL must be valid
+                      name: Name must not be blank
+                    status: 400
+                    timestamp: 2025-07-08 20:48:30.631028
+  /v1/favorites/{userId}:
+    get:
+      tags:
+      - Favorites
+      summary: Get all favorites by user ID
+      operationId: getAllFavoritesByUser
+      parameters:
+      - name: userId
+        in: path
+        description: User ID
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: true
+          minimum: 0
+      responses:
+        '200':
+          description: List of user's favorite products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoriteResponseDto'
+              examples:
+                Favorites list:
+                  description: Favorites list
+                  value:
+                  - favoriteId: 1
+                    product:
+                      productId: 5
+                      name: Tulip Bulb Mix (10 pcs)
+                      description: Colorful tulip bulbs perfect for spring blooms
+                      price: 9.49
+                      discountPrice: 6.99
+                      categoryId: 3
+                  - favoriteId: 2
+                    product:
+                      productId: 10
+                      name: Hanging Planter Basket
+                      description: Woven hanging basket with metal chain
+                      price: 12.5
+                      discountPrice: 9.25
+                      categoryId: 5
+        '404':
+          description: User not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                User not found:
+                  description: User not found
+                  value:
+                    exception: UserNotFoundException
+                    message: User with id 12 not found
+                    status: 404
+                    timestamp: 2025-07-08 23:34:45.605807
+    post:
+      tags:
+      - Favorites
+      summary: Add product to favorites
+      operationId: createFavorite
+      parameters:
+      - name: userId
+        in: path
+        description: Add favorite for user
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: true
+          minimum: 0
+      requestBody:
+        description: Product to add to favorites
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FavoriteCreateRequestDto'
+            examples:
+              Favorite create request:
+                description: Favorite create request
+                value:
+                  productId: 10
+        required: true
+      responses:
+        '201':
+          description: Favorite created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoriteResponseDto'
+              examples:
+                Created favorite:
+                  description: Created favorite
+                  value:
+                    favoriteId: 8
+                    product:
+                      productId: 10
+                      name: Hanging Planter Basket
+                      description: Woven hanging basket with metal chain
+                      price: 12.5
+                      discountPrice: 9.25
+        '404':
+          description: User or product not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                User not found:
+                  description: User not found
+                  value:
+                    exception: UserNotFoundException
+                    message: User with id 12 not found
+                    status: 404
+                    timestamp: 2025-07-08 23:37:49.213879
+                Product not found:
+                  description: Product not found
+                  value:
+                    exception: ProductNotFoundException
+                    message: Product with id 12 not found
+                    status: 404
+                    timestamp: 2025-07-08 23:36:11.847041
+        '409':
+          description: Favorite already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Conflict:
+                  description: Conflict
+                  value:
+                    exception: FavoriteAlreadyExistsException
+                    message: Favorite with userId 4 and productId 10 already exists
+                    status: 409
+                    timestamp: 2025-07-08 23:35:45.857475
+  /v1/categories:
+    get:
+      tags:
+      - Categories
+      summary: Get all categories
+      operationId: getAllCategories
+      responses:
+        '200':
+          description: List of all categories
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryShortResponseDto'
+              examples:
+                List of categories:
+                  description: List of categories
+                  value:
+                  - categoryId: 1
+                    name: Fertilizer
+                  - categoryId: 2
+                    name: Protective products and septic tanks
+                  - categoryId: 3
+                    name: Planting material
+    post:
+      tags:
+      - Categories
+      summary: Create a new category
+      operationId: createCategory
+      requestBody:
+        description: Category to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CategoryCreateRequestDto'
+            examples:
+              Outdoor furniture:
+                description: Outdoor furniture
+                value:
+                  name: Outdoor furniture
+              Vertical planters:
+                description: Vertical planters
+                value:
+                  name: Vertical planters
+              Herb garden kits:
+                description: Herb garden kits
+                value:
+                  name: Herb garden kits
+        required: true
+      responses:
+        '201':
+          description: Category successfully created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoryResponseDto'
+              examples:
+                Created category:
+                  description: Created category
+                  value:
+                    categoryId: 6
+                    name: Outdoor furniture
+                    products: []
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Validation error:
+                  description: Validation error
+                  value:
+                    exception: MethodArgumentNotValidException
+                    messages:
+                      name: Category name should be from 2 to 20 characters
+                    status: 400
+                    timestamp: 2025-07-08 22:07:50.398558
+        '409':
+          description: Category name conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Conflict error:
+                  description: Conflict error
+                  value:
+                    exception: CategoryWithNameAlreadyExistsException
+                    message: Category with name Outdoor furniture already exists.
+                    status: 409
+                    timestamp: 2025-07-08 22:07:08.754019
+  /v1/users:
+    get:
+      tags:
+      - Users
+      summary: Get all users
+      operationId: getAllUsers
+      responses:
+        '200':
+          description: Successfully retrieved list of users
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserShortResponseDto'
+              examples:
+                List of users:
+                  description: List of users
+                  value:
+                  - userId: 1
+                    name: Alice Johnson
+                    email: alice.johnson@example.com
+                    phoneNumber: '+1234567890'
+                    role: ROLE_USER
+                  - userId: 2
+                    name: Bob Smith
+                    email: bob.smith@example.com
+                    phoneNumber: '+1987654321'
+                    role: ROLE_USER
+  /v1/favorites/{favoriteId}:
+    delete:
+      tags:
+      - Favorites
+      summary: Delete favorite by ID
+      operationId: deleteFavorite
+      parameters:
+      - name: favoriteId
+        in: path
+        description: ID of favorite to delete
+        required: true
+        schema:
+          type: integer
+          format: int64
+          exclusiveMinimum: true
+          minimum: 0
+        example: 1
+      responses:
+        '204':
+          description: Favorite deleted
+        '404':
+          description: Favorite not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiErrorResponse'
+              examples:
+                Favorite not found:
+                  description: Favorite not found
+                  value:
+                    exception: FavoriteNotFoundException
+                    message: Favorite with id 12 not found
+                    status: 404
+                    timestamp: 2025-07-08 23:38:06.466938
+components:
+  schemas:
+    UserCreateRequestDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 30
+          minLength: 2
+        email:
+          type: string
+          minLength: 1
+        phoneNumber:
+          type: string
+          pattern: ^\+?\d{10,15}$
+        password:
+          type: string
+          minLength: 1
+          pattern: ^\w{5,}$
+      required:
+      - email
+      - name
+      - password
+    FavoriteResponseDto:
+      type: object
+      properties:
+        favoriteId:
+          type: integer
+          format: int64
+        product:
+          $ref: '#/components/schemas/ProductShortResponseDto'
+    ProductShortResponseDto:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        discountPrice:
+          type: number
+        categoryId:
+          type: integer
+          format: int64
+    UserResponseDto:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        role:
+          type: string
+        favorites:
+          type: array
+          items:
+            $ref: '#/components/schemas/FavoriteResponseDto'
+    ApiErrorResponse:
+      type: object
+      properties:
+        exception:
+          type: string
+        message:
+          type: string
+        messages:
+          type: object
+          additionalProperties:
+            type: string
+        status:
+          type: integer
+          format: int32
+        timestamp:
+          type: string
+          format: date-time
+    ProductCreateRequestDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 30
+          minLength: 1
+        description:
+          type: string
+          maxLength: 100
+          minLength: 4
+        price:
+          type: number
+        discountPrice:
+          type: number
+        categoryId:
+          type: integer
+          format: int64
+        imageUrl:
+          type: string
+      required:
+      - categoryId
+      - description
+      - name
+      - price
+    ProductResponseDto:
+      type: object
+      properties:
+        productId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+        discountPrice:
+          type: number
+        categoryId:
+          type: integer
+          format: int64
+        imageUrl:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    CategoryCreateRequestDto:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 30
+          minLength: 4
+      required:
+      - name
+    CategoryResponseDto:
+      type: object
+      properties:
+        categoryId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        products:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductShortResponseDto'
+    FavoriteCreateRequestDto:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        productId:
+          type: integer
+          format: int64
+      required:
+      - productId
+    UserShortResponseDto:
+      type: object
+      properties:
+        userId:
+          type: integer
+          format: int64
+        name:
+          type: string
+        email:
+          type: string
+        phoneNumber:
+          type: string
+        role:
+          type: string
+    CategoryShortResponseDto:
+      type: object
+      properties:
+        categoryId:
+          type: integer
+          format: int64
+        name:
+          type: string
